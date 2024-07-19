@@ -57,6 +57,15 @@ class RandomUserController extends Controller
                 $chatId = $callbackQuery['message']['chat']['id'];
                 $data = $callbackQuery['data'];
 
+                if ($data === 'enter_name') {
+                   $this->enterName($chatId);
+                }
+            }
+            if (isset($update['callback_query'])) {
+                $callbackQuery = $update['callback_query'];
+                $chatId = $callbackQuery['message']['chat']['id'];
+                $data = $callbackQuery['data'];
+
                 if ($data === 'enter_phone') {
                     $this->firstPhone($chatId);
                 }
@@ -130,6 +139,13 @@ class RandomUserController extends Controller
             'text' => 'Telefon raqam kiritishga tayyor. Namuna 934257087 raqamni shunday ko\'rinishda kiriting!',
         ]);
     }
+    public function enterName($chatId)
+    {
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Hammasi muvaffaqiyatli boldi. Kodingiz omadli bolsa oyin bolib otganidan song sovrin yutib olasiz. sizga adminlarimiz aloqaga chiqishadi',
+        ]);
+    }
     public function createPhone($user,$text)
     {
         $user->update([
@@ -138,6 +154,11 @@ class RandomUserController extends Controller
         Telegram::sendMessage([
             'chat_id' => $user->telegram_id,
             'text' => 'Telefon raqam qabul qilindi. oxirgi qadam ismingizni kiritish uchun pastdagi tugmani bosing',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [['text' => 'Ismni kiritish', 'callback_data' => 'enter_name']],
+                ]
+            ])
         ]);
     }
 }
