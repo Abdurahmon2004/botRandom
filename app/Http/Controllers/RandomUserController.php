@@ -53,7 +53,10 @@ class RandomUserController extends Controller
                 $data = $callbackQuery['data'];
 
                 if ($data === 'enter_code') {
-                    $this->enterCode($chatId);
+                    Telegram::sendMessage([
+                        'chat_id'=> $chatId,
+                        'text'=> 'salom',
+                    ]);
                 }
             }
             if (isset($update['callback_query'])) {

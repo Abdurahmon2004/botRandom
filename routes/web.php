@@ -10,9 +10,5 @@ Route::get('/', function () {
 });
 Route::get('/com', function () {
     Artisan::call('optimize');
-    $user = TgUser::where('telegram_id',6054214655)->first();
-    $user->update([
-        'state'=>'await_phone'
-    ]);
     dd('hello');
 });
