@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\code;
 use App\Models\TgUser;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -62,7 +61,8 @@ class RandomUserController extends Controller
     }
 
     public function processCode($chatId, $text, $messageId){
-        $code = Code::where('code', $text)->first();
+
+        $code = code::where('code', $text)->first();
 
         if ($code) {
             $this->enterPhone($chatId, $messageId);
