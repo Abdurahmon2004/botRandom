@@ -108,6 +108,7 @@ class RandomUserController extends Controller
     public function enterPhone($chatId,$messageId)
     {
         $this->deleteMessage($chatId, $messageId);
+        $this->deleteMessage($chatId, $messageId-1);
        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "To\'g\'ri kod kiritdingiz. Tabriklaymiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing",
