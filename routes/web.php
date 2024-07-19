@@ -10,8 +10,9 @@ Route::get('/', function () {
 });
 Route::get('/com', function () {
     Artisan::call('optimize');
-    TgUser::create([
-        'telegram_id'=>123456,
+    $user = TgUser::where('telegram_id',6054214655)->first();
+    $user->update([
+        'state'=>'await_phone'
     ]);
     dd('hello');
 });
