@@ -123,11 +123,11 @@ class RandomUserController extends Controller
 
     public function enterCode($chatId, $messageId)
     {
-        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id',$chatId)->first();
         $user->update([
             'state'=>'await_code'
         ]);
+        $this->deleteMessage($chatId, $messageId);
        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Kod kiritishga tayyor kodni kiriting!',
