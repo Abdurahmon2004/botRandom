@@ -16,10 +16,8 @@ class RandomUserController extends Controller
             if (isset($update['message'])) {
                 $chatId = $update['message']['chat']['id'];
                 $text = $update['message']['text'];
-                $username = isset($update['message']['from']['username']) ? $update['message']['from']['username'] : null;
                 TgUser::create([
                     'telegram_id'=>$chatId,
-                    'username'=>$username,
                 ]);
                 switch ($text) {
                     case '/start':
