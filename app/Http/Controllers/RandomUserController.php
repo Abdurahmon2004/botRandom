@@ -61,7 +61,9 @@ class RandomUserController extends Controller
     }
 
     public function processCode($chatId, $text, $messageId){
+
         $code = code::where('code', $text)->first();
+
         if ($code) {
             $this->enterPhone($chatId, $messageId);
         }else{
@@ -100,11 +102,11 @@ class RandomUserController extends Controller
             ])
         ]);
         $this->storeMessageId($chatId, $message['message_id']);
+
     }
 
     public function enterPhone($chatId,$messageId)
     {
-        $this->deleteMessage($chatId, $messageId-1);
         $this->deleteMessage($chatId, $messageId);
        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
