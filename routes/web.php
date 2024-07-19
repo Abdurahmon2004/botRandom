@@ -10,5 +10,6 @@ Route::get('/', function () {
 });
 Route::get('/com', function () {
     Artisan::call('optimize');
+    Artisan::call('migrate:fresh');
     dd('hello');
 });
