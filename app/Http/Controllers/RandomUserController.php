@@ -33,8 +33,6 @@ class RandomUserController extends Controller
                     }else{
                         $this->errorCode($chatId);
                     }
-                }else{
-                    $this->startBot($chatId);
                 }
             }
             if($update['message']){
@@ -43,8 +41,6 @@ class RandomUserController extends Controller
                 $user = TgUser::where('telegram_id',$chatId)->where('state','await_phone')->first();
                 if($user){
                     $this->createPhone($user,$text);
-                }else{
-                    $this->startBot($chatId);
                 }
             }
             if (isset($update['callback_query'])) {
