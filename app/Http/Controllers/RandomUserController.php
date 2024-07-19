@@ -70,17 +70,17 @@ class RandomUserController extends Controller
 
     public function startBot($chatId)
     {
-        // TgUser::create([
-        //     'telegram_id'=>$chatId,
-        // ]);
+        TgUser::create([
+            'telegram_id'=>$chatId,
+        ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "Assalomu alaykum, botimizga hush kelibsiz! Kodni kiritish uchun pastdagi tugmani bosing.",
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [['text' => 'Kod kiritish', 'callback_data' => 'enter_code']],
-                ],
-            ]),
+                ]
+            ])
         ]);
     }
     public function errorCode($chatId)
@@ -91,8 +91,8 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [['text' => 'Kod kiritish', 'callback_data' => 'enter_code']],
-                ],
-            ]),
+                ]
+            ])
         ]);
     }
 
@@ -108,8 +108,8 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [['text' => 'Telefon raqam kiritish', 'callback_data' => 'enter_phone']],
-                ],
-            ]),
+                ]
+            ])
         ]);
     }
 
