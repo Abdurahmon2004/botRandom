@@ -102,7 +102,6 @@ class RandomUserController extends Controller
             ])
         ]);
         $this->storeMessageId($chatId, $message['message_id']);
-
     }
 
     public function enterPhone($chatId,$messageId)
@@ -128,6 +127,7 @@ class RandomUserController extends Controller
             'state'=>'await_code'
         ]);
         $this->deleteMessage($chatId, $messageId);
+        $this->deleteMessage($chatId, $messageId-1);
        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Kod kiritishga tayyor kodni kiriting!',
