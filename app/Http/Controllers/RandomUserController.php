@@ -151,7 +151,7 @@ class RandomUserController extends Controller
     {
         $user = TgUser::where('telegram_id',$chatId)->first();
         $user->update([
-            'state'=>'await_phone'
+            'state'=>'await_name'
         ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
