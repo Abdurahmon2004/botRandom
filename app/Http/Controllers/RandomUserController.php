@@ -136,7 +136,7 @@ class RandomUserController extends Controller
             'phone'=>$text
         ]);
         Telegram::sendMessage([
-            'chat_id' => $user->id,
+            'chat_id' => $user->telegram_id,
             'text' => 'Telefon raqam qabul qilindi. oxirgi qadam ismingizni kiritish uchun pastdagi tugmani bosing',
         ]);
     }

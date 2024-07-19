@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('tg_users', function (Blueprint $table) {
             $table->string('state')->nullable();
+            $table->string('status')->default(1);
         });
     }
 
