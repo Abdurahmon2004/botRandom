@@ -66,7 +66,7 @@ class RandomUserController extends Controller
 
         if ($code) {
             $this->enterPhone($chatId, $messageId);
-        } else {
+        }else{
             $this->errorCode($chatId, $messageId);
         }
     }
