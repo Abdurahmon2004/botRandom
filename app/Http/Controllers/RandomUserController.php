@@ -22,48 +22,45 @@ class RandomUserController extends Controller
                         break;
                 }
             }
-            // if($update['message']){
-            //     $chatId = $update['message']['chat']['id'];
-            //     $text = $update['message']['text'];
-            //     $user = TgUser::where('telegram_id',$chatId)->where('state','await_code')->first();
-            //     if($user){
-            //         $code = code::where('code',$text)->first();
-            //         if($code){
-            //             $this->enterPhone($chatId);
-            //         }else{
-            //             $this->errorCode($chatId);
-            //         }
-            //     }
-            // }
-            // if($update['message']){
-            //     $chatId = $update['message']['chat']['id'];
-            //     $text = $update['message']['text'];
-            //     $user = TgUser::where('telegram_id',$chatId)->where('state','await_phone')->first();
-            //     if($user){
-            //         $this->createPhone($user,$text);
-            //     }
-            // }
+            if(isset($update['message'])){
+                $chatId = $update['message']['chat']['id'];
+                $text = $update['message']['text'];
+                $user = TgUser::where('telegram_id',$chatId)->where('state','await_code')->first();
+                if($user){
+                    $code = code::where('code',$text)->first();
+                    if($code){
+                        $this->enterPhone($chatId);
+                    }else{
+                        $this->errorCode($chatId);
+                    }
+                }
+            }
+            if(isset($update['message'])){
+                $chatId = $update['message']['chat']['id'];
+                $text = $update['message']['text'];
+                $user = TgUser::where('telegram_id',$chatId)->where('state','await_phone')->first();
+                if($user){
+                    $this->createPhone($user,$text);
+                }
+            }
             if (isset($update['callback_query'])) {
                 $callbackQuery = $update['callback_query'];
                 $chatId = $callbackQuery['message']['chat']['id'];
                 $data = $callbackQuery['data'];
 
                 if ($data === 'enter_code') {
-                    Telegram::sendMessage([
-                        'chat_id'=> $chatId,
-                        'text'=> 'salom',
-                    ]);
+                   $this->enterCode($chatId);
                 }
             }
-            // if (isset($update['callback_query'])) {
-            //     $callbackQuery = $update['callback_query'];
-            //     $chatId = $callbackQuery['message']['chat']['id'];
-            //     $data = $callbackQuery['data'];
+            if (isset($update['callback_query'])) {
+                $callbackQuery = $update['callback_query'];
+                $chatId = $callbackQuery['message']['chat']['id'];
+                $data = $callbackQuery['data'];
 
-            //     if ($data === 'enter_phone') {
-            //         $this->firstPhone($chatId);
-            //     }
-            // }
+                if ($data === 'enter_phone') {
+                    $this->firstPhone($chatId);
+                }
+            }
         }
     }
 
