@@ -43,6 +43,14 @@ class RandomUserController extends Controller
                     $this->createPhone($user,$text);
                 }
             }
+            if(isset($update['message'])){
+                $chatId = $update['message']['chat']['id'];
+                $text = $update['message']['text'];
+                $user = TgUser::where('telegram_id',$chatId)->where('state','await_name')->first();
+                if($user){
+                    $this->finish($chatId);
+                }
+            }
             if (isset($update['callback_query'])) {
                 $callbackQuery = $update['callback_query'];
                 $chatId = $callbackQuery['message']['chat']['id'];
@@ -106,10 +114,6 @@ class RandomUserController extends Controller
 
     public function enterPhone($chatId)
     {
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'state'=>'await_phone'
-        ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "To\'g\'ri kod kiritdingiz. Tabriklaymiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing",
@@ -134,6 +138,10 @@ class RandomUserController extends Controller
     }
     public function firstPhone($chatId)
     {
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $user->update([
+            'state'=>'await_phone'
+        ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Telefon raqam kiritishga tayyor. Namuna 934257087 raqamni shunday ko\'rinishda kiriting!',
@@ -141,9 +149,13 @@ class RandomUserController extends Controller
     }
     public function enterName($chatId)
     {
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $user->update([
+            'state'=>'await_phone'
+        ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
-            'text' => 'Hammasi muvaffaqiyatli boldi. Kodingiz omadli bolsa oyin bolib otganidan song sovrin yutib olasiz. sizga adminlarimiz aloqaga chiqishadi',
+            'text' => 'Ismingizni kiriting',
         ]);
     }
     public function createPhone($user,$text)
@@ -161,4 +173,12 @@ class RandomUserController extends Controller
             ])
         ]);
     }
+    public function finish($chatId){
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Hammasi muvaffaqiyatli boldi. Kodingiz omadli bolsa oyin bolib otganidan song sovrin yutib olasiz. sizga adminlarimiz aloqaga chiqishadi',
+        ]);
+    }
 }
+
+//
