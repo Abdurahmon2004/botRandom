@@ -1,13 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\code;
 use App\Models\TgUser;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
-class RandomUserController extends Controller
+class TgController extends Controller
 {
     public function webhook(Request $request)
     {
@@ -28,9 +28,13 @@ class RandomUserController extends Controller
         }
     }
 
-    public function handleMessage($chatId, $text, $messageId){
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        if($user){
+    private function handleMessage($chatId, $text, $messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+
+        if ($text === '/start') {
+            $this->startBot($chatId);
+        } elseif ($user) {
             switch ($user->state) {
                 case 'await_code':
                     $this->processCode($chatId, $text, $messageId);
@@ -42,10 +46,9 @@ class RandomUserController extends Controller
                     $this->finish($chatId, $messageId);
                     break;
             }
-        }else if($text == '/start'){
-            $this->startBot($chatId);
         }
     }
+
     private function handleCallbackQuery($chatId, $data, $messageId)
     {
         switch ($data) {
@@ -53,7 +56,7 @@ class RandomUserController extends Controller
                 $this->enterCode($chatId, $messageId);
                 break;
             case 'enter_phone':
-                $this->firstPhone($chatId, $messageId);
+                $this->enterPhone($chatId, $messageId);
                 break;
             case 'enter_name':
                 $this->enterName($chatId, $messageId);
@@ -61,24 +64,11 @@ class RandomUserController extends Controller
         }
     }
 
-    public function processCode($chatId, $text, $messageId){
-        $code = Code::where('code', $text)->first();
-
-        if ($code) {
-            $this->enterPhone($chatId, $messageId);
-        } else {
-            $this->errorCode($chatId, $messageId);
-        }
-    }
-    public function startBot($chatId)
+    private function startBot($chatId)
     {
-      $user = TgUser::where('telegram_id',$chatId)->first();
-       if(!$user){
-        TgUser::create([
-            'telegram_id'=>$chatId
-        ]);
-       }
-       $message = Telegram::sendMessage([
+        TgUser::firstOrCreate(['telegram_id' => $chatId]);
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "Assalomu alaykum, botimizga hush kelibsiz! Kodni kiritish uchun pastdagi tugmani bosing.",
             'reply_markup' => json_encode([
@@ -87,12 +77,26 @@ class RandomUserController extends Controller
                 ]
             ])
         ]);
+
         $this->storeMessageId($chatId, $message['message_id']);
     }
-    public function errorCode($chatId, $messageId)
+
+    private function processCode($chatId, $text, $messageId)
+    {
+        $code = code::where('code', $text)->first();
+
+        if ($code) {
+            $this->enterPhone($chatId, $messageId);
+        } else {
+            $this->errorCode($chatId, $messageId);
+        }
+    }
+
+    private function errorCode($chatId, $messageId)
     {
         $this->deleteMessage($chatId, $messageId);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "Kod xato. Iltimos, kodni qayta kiritish uchun pastdagi tugmani bosing",
             'reply_markup' => json_encode([
@@ -101,75 +105,82 @@ class RandomUserController extends Controller
                 ]
             ])
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
 
+        $this->storeMessageId($chatId, $message['message_id']);
     }
 
-    public function enterPhone($chatId,$messageId)
+    private function enterPhone($chatId, $messageId)
     {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update(['state' => 'await_phone']);
+
         $this->deleteMessage($chatId, $messageId);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
-            'text' => "To\'g\'ri kod kiritdingiz. Tabriklaymiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing",
+            'text' => "To'g'ri kod kiritdingiz. Tabriklaymiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing",
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [['text' => 'Telefon raqam kiritish', 'callback_data' => 'enter_phone']],
                 ]
             ])
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
 
+        $this->storeMessageId($chatId, $message['message_id']);
     }
 
-    public function enterCode($chatId, $messageId)
+    private function enterCode($chatId, $messageId)
     {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update(['state' => 'await_code']);
+
         $this->deleteMessage($chatId, $messageId);
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'state'=>'await_code'
-        ]);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Kod kiritishga tayyor kodni kiriting!',
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
 
+        $this->storeMessageId($chatId, $message['message_id']);
     }
-    public function firstPhone($chatId, $messageId)
+
+    private function enterPhone($chatId, $messageId)
     {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update(['state' => 'await_phone']);
+
         $this->deleteMessage($chatId, $messageId);
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'state'=>'await_phone'
-        ]);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Telefon raqam kiritishga tayyor. Namuna 934257087 raqamni shunday ko\'rinishda kiriting!',
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
 
+        $this->storeMessageId($chatId, $message['message_id']);
     }
-    public function enterName($chatId, $messageId)
+
+    private function enterName($chatId, $messageId)
     {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update(['state' => 'await_name']);
+
         $this->deleteMessage($chatId, $messageId);
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'state'=>'await_name'
-        ]);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Ismingizni kiriting',
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
 
+        $this->storeMessageId($chatId, $message['message_id']);
     }
-    public function createPhone($user,$text, $messageId)
+
+    private function createPhone($user, $text, $messageId)
     {
-        $user->update([
-            'phone'=>$text
-        ]);
+        $user->update(['phone' => $text]);
+
         $this->deleteMessage($user->telegram_id, $messageId);
-       $message = Telegram::sendMessage([
+
+        $message = Telegram::sendMessage([
             'chat_id' => $user->telegram_id,
             'text' => 'Telefon raqam qabul qilindi. oxirgi qadam ismingizni kiritish uchun pastdagi tugmani bosing',
             'reply_markup' => json_encode([
@@ -178,18 +189,20 @@ class RandomUserController extends Controller
                 ]
             ])
         ]);
-        $this->storeMessageId($user->telegram_id, $message['message_id']);
 
+        $this->storeMessageId($user->telegram_id, $message['message_id']);
     }
-    public function finish($chatId, $messageId){
+
+    private function finish($chatId, $messageId)
+    {
         $this->deleteMessage($chatId, $messageId);
-       $message = Telegram::sendMessage([
+
+        Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Hammasi muvaffaqiyatli boldi. Kodingiz omadli bolsa oyin bolib otganidan song sovrin yutib olasiz. sizga adminlarimiz aloqaga chiqishadi',
         ]);
-        $this->storeMessageId($chatId, $message['message_id']);
-
     }
+
     private function storeMessageId($chatId, $messageId)
     {
         $user = TgUser::where('telegram_id', $chatId)->first();
@@ -204,5 +217,3 @@ class RandomUserController extends Controller
         ]);
     }
 }
-
-//
