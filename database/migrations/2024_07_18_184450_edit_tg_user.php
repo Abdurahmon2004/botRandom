@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tg_users', function (Blueprint $table) {
-            $table->string('state');
+            $table->string('state')->nullable();
         });
     }
 

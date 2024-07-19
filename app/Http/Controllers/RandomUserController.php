@@ -70,9 +70,12 @@ class RandomUserController extends Controller
 
     public function startBot($chatId)
     {
+      $user = TgUser::where('telegram_id',$chatId)->first();
+       if(!$user){
         TgUser::create([
-            'telegram_id'=>$chatId,
+            'telegram_id'=>$chatId
         ]);
+       }
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => "Assalomu alaykum, botimizga hush kelibsiz! Kodni kiritish uchun pastdagi tugmani bosing.",
