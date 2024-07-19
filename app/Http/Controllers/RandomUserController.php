@@ -40,6 +40,9 @@ class RandomUserController extends Controller
                 case 'await_name':
                     $this->finish($chatId, $messageId);
                     break;
+                default:
+                    $this->startBot($chatId);
+                break;
             }
         }else if($text == '/start'){
             $this->startBot($chatId);
