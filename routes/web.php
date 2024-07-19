@@ -10,6 +10,8 @@ Route::get('/', function () {
 });
 Route::get('/com', function () {
     Artisan::call('optimize');
-    Artisan::call('migrate');
+    TgUser::create([
+        'telegram_id'=>123456,
+    ]);
     dd('hello');
 });
