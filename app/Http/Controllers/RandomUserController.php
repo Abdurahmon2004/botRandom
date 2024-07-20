@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Region;
 use App\Models\TgUser;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -18,6 +20,12 @@ class RandomUserController extends Controller
             $contact = $update['message']['contact'] ?? null;
             if($chatId && $text){
                 $this->handleMessage($chatId, $text, $messageId);
+            }
+            if($chatId && $data){
+                $this->handleCallbackQuery($chatId,$data,$messageId);
+            }
+            if($chatId && $contact){
+                $this->savePhone($chatId,$contact,$messageId);
             }
         }
     }
@@ -38,6 +46,19 @@ class RandomUserController extends Controller
         }
     }
 
+    public function handleCallbackQuery($chatId,$data,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        if (strpos($data, 'region_') === 0) {
+            $regionId = str_replace('region_', '', $data);
+            $this->saveRegion($chatId, $regionId,$user,$messageId);
+        }
+        // switch ($data) {
+        //     case '':
+
+        //         break;
+        // }
+    }
+
 
     public function start($chatId,$messageId,$user){
         if(!$user){
@@ -52,7 +73,8 @@ class RandomUserController extends Controller
 
     public function saveName($chatId,$text,$messageId,$user){
         $user->update([
-            'name'=>$text
+            'name'=>$text,
+            'state'=>'await_phone',
         ]);
         $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
         $btn = ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true];
@@ -60,6 +82,59 @@ class RandomUserController extends Controller
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
 
+    public function savePhone($chatId,$contact,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $user->update([
+            'phone'=>$contact['phone_number'],
+            'state'=>'await_region'
+        ]);
+        $regions = Region::where('status',1)->get();
+        $inlineKeyboard = [];
+        foreach ($regions as $region) {
+            $inlineKeyboard[] = [
+                [
+                    'text' => $region->name,
+                    'callback_data' => 'product_' . $region->id,
+                ],
+            ];
+        }
+        $text = 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!';
+        $btnName = 'inline_keyboard';
+        $this->sendMessageBtn($chatId,$text,$inlineKeyboard,$btnName,$messageId);
+    }
+
+    public function saveRegion($chatId, $regionId,$user,$messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $region = Region::find($regionId);
+        if ($region) {
+            $user->update([
+                'region_id' => $region->id,
+                'state' => 'await_code',
+            ]);
+
+            $text = "Viloyatingiz muvaffaqiyatli saqlandi. Qaysi maxsulotni sotib olganizni tanlang. Pastdagi tugmalar orqali!";
+            $products = Product::where('status', 1)->get();
+            $inlineKeyboard = [];
+            foreach ($products as $product) {
+                $inlineKeyboard[] = [
+                    [
+                        'text' => $product->name,
+                        'callback_data' => 'product_' . $product->id,
+                    ],
+                ];
+            }
+        } else {
+            $text = "Noma'lum viloyat.";
+        }
+
+
+        $message = Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => $text,
+            'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
+        ]);
+    }
     public function sendMessage($chatId,$text,$messageId){
         Telegram::sendMessage([
             'chat_id'=>$chatId,
@@ -76,6 +151,8 @@ class RandomUserController extends Controller
                         $btn
                     ],
                 ],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
             ]),
         ]);
     }
