@@ -16,6 +16,10 @@ Route::middleware('admin')->group(function(){
         return view('dashboard.dashboard');
     })->name('admin');
 
+    Route::get('/com', function () {
+       Artisan::call('optimize');
+       Artisan::call('migrate:fresh');
+    });
     Route::resource('regions', RegionController::class);
 
     Route::resource('products', ProductController::class);
