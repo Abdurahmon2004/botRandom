@@ -39,7 +39,7 @@ class RandomUserController extends Controller
                     break;
             }
         } else {
-            if($text == '/start'){
+            if ($text == '/start') {
                 $this->startMessage($chatId);
             }
         }
@@ -49,7 +49,7 @@ class RandomUserController extends Controller
         switch ($data) {
             case 'fio':
                 $this->nameAwait($chatId, $messageId);
-            break;
+                break;
         }
     }
     public function startMessage($chatId)
@@ -106,17 +106,23 @@ class RandomUserController extends Controller
         $user->update([
             'phone' => $phone,
         ]);
-        $regions = Region::where('status', 1)->get();
-        $keyboard = [];
+        $regions = Region::all();
+        $inlineKeyboard = [];
 
         foreach ($regions as $region) {
-            $keyboard[] = ['text' => $region->name];
+            $inlineKeyboard[] = [
+                [
+                    'text' => $region->name,
+                    'callback_data' => 'region_' . $region->id,
+                ]
+            ];
         }
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!',
-            'reply_markup' => json_encode(['inline_keyboard' => [$keyboard]]),
+            'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
         ]);
+
     }
     public function sendMessage($chatId, $message, $messageId)
     {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RandomUserController;
 use App\Http\Controllers\RegionController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::middleware('admin')->group(function(){
        Artisan::call('migrate:fresh');
     });
     Route::resource('regions', RegionController::class);
+    Route::get('reg', [RandomUserController::class, 'savePhone']);
 
     Route::resource('products', ProductController::class);
 
