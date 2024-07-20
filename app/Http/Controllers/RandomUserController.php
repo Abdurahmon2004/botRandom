@@ -27,7 +27,7 @@ class RandomUserController extends Controller
             if ($chatId && $contact) {
                 $user = TgUser::where('telegram_id',$chatId)->where('state','await_phone')->first();
                 if($user){
-                    $this->savePhone($chatId, $contact);
+                    $this->savePhone($chatId, $contact,$text,$messageId);
                 }
             }
         }
@@ -91,10 +91,12 @@ class RandomUserController extends Controller
             $this->startMessage($chatId,true);
         }
         $user = TgUser::where('telegram_id', $chatId)->first();
+       if($text){
         $user->update([
             'name' => $text,
             'state' => 'await_phone',
         ]);
+       }
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish tugmasini bosing!"',
@@ -109,8 +111,11 @@ class RandomUserController extends Controller
             ]),
         ]);
     }
-    public function savePhone($chatId, $contact)
+    public function savePhone($chatId, $contact,$text,$messageId)
     {
+        if($text == '/start'){
+            $this->phoneMessageSaveName($chatId,false,$messageId);
+        }
         $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
         $user->update([
