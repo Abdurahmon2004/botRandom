@@ -167,17 +167,17 @@ class RandomUserController extends Controller
                 'state' => 'await_code',
             ]);
 
-            $text = "Viloyatingiz muvaffaqiyatli saqlandi. Qaysi maxsulotni sotib olganizni pastdagi tugmani bosing!";
-            // $products = Product::where('status', 1)->get();
-            // $inlineKeyboard = [];
-            // foreach ($products as $product) {
-            //     $inlineKeyboard[] = [
-            //         [
-            //             'text' => $product->name,
-            //             'callback_data' => 'region_' . $product->id,
-            //         ],
-            //     ];
-            // }
+            $text = "Viloyatingiz muvaffaqiyatli saqlandi. Qaysi maxsulotni sotib olganizni tanlang. Pastdagi tugmalar orqali!";
+            $products = Product::where('status', 1)->get();
+            $inlineKeyboard = [];
+            foreach ($products as $product) {
+                $inlineKeyboard[] = [
+                    [
+                        'text' => $product->name,
+                        'callback_data' => 'product_' . $product->id,
+                    ],
+                ];
+            }
         } else {
             $text = "Noma'lum viloyat.";
         }
@@ -186,6 +186,7 @@ class RandomUserController extends Controller
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => $text,
+            'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
         ]);
     }
 
