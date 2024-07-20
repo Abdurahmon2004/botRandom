@@ -9,7 +9,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class RandomUserController extends Controller
 {
     public function webhook(){
-        $update = Telegram::getUpdates();
+        $update = Telegram::getWebhookUpdates();
         if($update){
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $text = $update['message']['text'] ?? null;
