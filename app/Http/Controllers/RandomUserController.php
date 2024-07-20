@@ -63,7 +63,7 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true],
+                        ['text' => 'Telefon raqamingizni kiriting', 'callback_data' => 'fio'],
                     ],
                 ],
             ]),
@@ -91,7 +91,7 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'keyboard' => [
                     [
-                        ['text' => 'Telefon raqamingizni kiriting', 'callback_data' => 'fio'],
+                        ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true],
                     ],
                 ],
                 'resize_keyboard' => true,
