@@ -60,8 +60,11 @@ class RandomUserController extends Controller
                 'inline_keyboard' => [
                     [
                         ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
-                        ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio']
                 ],
+                [
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio']
+                 ],
                 ]
             ])
         ]);
