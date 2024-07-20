@@ -29,6 +29,12 @@ class RandomUserController extends Controller
 
                 break;
             }
+        }else{
+            switch ($text) {
+                case '/start':
+                    $this->start($chatId,$messageId,$user);
+                    break;
+            }
         }
     }
 
