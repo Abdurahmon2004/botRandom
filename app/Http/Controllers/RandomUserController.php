@@ -76,7 +76,6 @@ class RandomUserController extends Controller
             ]);
         }
         $this->deleteMessage($chatId, $messageId);
-
         $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
@@ -98,10 +97,10 @@ class RandomUserController extends Controller
             'state' => 'await_fio',
         ]);
         $this->deleteMessage($chatId, $messageId);
-        $message = 'Ism va Familiyangizni kiriting!!';
+        $text = 'Ism va Familiyangizni kiriting!!';
         $message = Telegram::sendMessage([
             'chat_id' => $chatId,
-            'text' => $message,
+            'text' => $text,
         ]);
         $this->storeMessageId($chatId, $message['message_id']);
     }
@@ -203,26 +202,41 @@ class RandomUserController extends Controller
     }
     private function deleteMessage($chatId, $messageId)
     {
-        $chats = UserChat::where('chat_id',$chatId)->get();
-        if($chats){
-           foreach ($chats as $chat) {
+        $chats = UserChat::where('chat_id', $chatId)->get();
+    if ($chats) {
+        foreach ($chats as $chat) {
             Telegram::deleteMessage([
-                'chat_id'=>$chat->chat_id,
-                'message_id'=>$chat->message_id,
+                'chat_id' => $chat->chat_id,
+                'message_id' => $chat->message_id,
             ]);
-           }
+            $chat->delete(); // Bu yerda saqlangan xabarlarni o'chiramiz
         }
+    }
     }
 
     private function storeMessageId($chatId, $messageId)
     {
         $user = TgUser::where('telegram_id', $chatId)->first();
-        if($user){
-            UserChat::create([
-                'chat_id'=>$chatId,
-                'message_id'=>$messageId,
+        if (!$user) {
+            TgUser::create([
+                'telegram_id' => $chatId,
             ]);
         }
+        if ($messageId) {
+            $this->deleteMessage($chatId, $messageId);
+        }
+        $message = Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        ['text' => 'Ism va Familiya kiritish!', 'callback_data' => 'fio'],
+                    ],
+                ],
+            ]),
+        ]);
+        $this->storeMessageId($chatId, $message['message_id']);
     }
 }
 
