@@ -77,7 +77,7 @@ class RandomUserController extends Controller
             'state'=>'await_phone',
         ]);
         $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
-        $btn = ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true];
+        $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
@@ -89,18 +89,18 @@ class RandomUserController extends Controller
             'state'=>'await_region'
         ]);
         $regions = Region::where('status',1)->get();
-        $inlineKeyboard = [];
+        $btn = [];
         foreach ($regions as $region) {
-            $inlineKeyboard[] = [
+            $btn[] = [
                 [
                     'text' => $region->name,
                     'callback_data' => 'product_' . $region->id,
                 ],
             ];
         }
-        $text = 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!';
+        $message = 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!';
         $btnName = 'inline_keyboard';
-        $this->sendMessageBtn($chatId,$text,$inlineKeyboard,$btnName,$messageId);
+        $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
 
     public function saveRegion($chatId, $regionId,$user,$messageId)
@@ -146,11 +146,7 @@ class RandomUserController extends Controller
             'chat_id'=>$chatId,
             'text'=>$text,
             'reply_markup' => json_encode([
-                $btnName => [
-                    [
-                        $btn
-                    ]
-                ],
+                $btnName => $btn,
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
             ]),
