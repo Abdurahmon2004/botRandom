@@ -58,7 +58,8 @@ class RandomUserController extends Controller
             'text'=>'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
-                    [['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio']],
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
                 ]
             ])
         ]);
@@ -82,7 +83,7 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
-                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
+
                 ]
             ])
         ]);
