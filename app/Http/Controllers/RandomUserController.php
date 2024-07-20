@@ -108,18 +108,13 @@ class RandomUserController extends Controller
     }
     public function phoneMessageSaveName($chatId, $text, $messageId)
     {
-        if ($text == '/start') {
-            $this->startMessage($chatId, true,$messageId);
-        }
         $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
-        if ($text != '/start') {
             $user->update([
                 'name' => $text,
                 'state' => 'await_phone',
             ]);
-        }
-        $message = Telegram::sendMessage([
+           $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish tugmasini bosing!"',
             'reply_markup' => json_encode([
