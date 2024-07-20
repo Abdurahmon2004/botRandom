@@ -26,7 +26,7 @@ class RandomUserController extends Controller
             }
         }
     }
-    public function handleMessage($chatId,$text, $messageId){
+    public function handleMessage($chatId, $text, $messageId){
         $user = TgUser::where('telegram_id',$chatId)->first();
         if($user){
             switch ($user->state) {
@@ -85,8 +85,8 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        ['text' => 'Telefon raqam ulashish', 'callback_contact' => true],
-                    ]
+                        ['text' => 'Telefon raqamingizni kiriting',  'request_contact' => true],
+                    ],
                 ]
             ])
         ]);
