@@ -31,13 +31,10 @@ class RandomUserController extends Controller
         if($user){
             switch ($user->state) {
                 case 'await_fio':
-
-                    break;
-
-                default:
-                    # code...
                     break;
             }
+        }else{
+            $this->startMessage($chatId);
         }
     }
     public function handleCallbackQuery($chatId,$data, $messageId){
