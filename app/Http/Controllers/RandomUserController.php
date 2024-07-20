@@ -48,9 +48,6 @@ class RandomUserController extends Controller
                 case 'await_fio':
                     $this->phoneMessageSaveName($chatId, $text, $messageId);
                 break;
-                // case 'await_code':
-                //     $this->saveCode($chatId, $text, $messageId);
-                // break;
             }
         } else {
             if ($text == '/start') {
@@ -67,7 +64,7 @@ class RandomUserController extends Controller
             switch ($data) {
                 case 'fio':
                     $this->nameAwait($chatId, $messageId);
-                    break;
+                break;
             }
         }
     }
@@ -102,7 +99,6 @@ class RandomUserController extends Controller
         ]);
         $this->deleteMessage($chatId, $messageId);
         $message = 'Ism va Familiyangizni kiriting!!';
-        $this->deleteMessage($chatId, $messageId);
         $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => $message,
@@ -116,7 +112,6 @@ class RandomUserController extends Controller
             return;
         }
         $this->deleteMessage($chatId, $messageId);
-        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         if ($text != '/start') {
             $user->update([
@@ -147,7 +142,6 @@ class RandomUserController extends Controller
             return;
         }
         $this->deleteMessage($chatId, $messageId);
-        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
         $user->update([
@@ -175,7 +169,6 @@ class RandomUserController extends Controller
     public function saveRegion($chatId, $regionId,$messageId)
     {
         $this->deleteMessage($chatId, $messageId);
-        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $region = Region::find($regionId);
 
@@ -210,7 +203,15 @@ class RandomUserController extends Controller
     }
     private function deleteMessage($chatId, $messageId)
     {
-         UserChat::where('chat_id',$chatId)->delete();
+        $chats = UserChat::where('chat_id',$chatId)->get();
+        if($chats){
+           foreach ($chats as $chat) {
+            Telegram::deleteMessage([
+                'chat_id'=>$chat->chat_id,
+                'message_id'=>$chat->message_id,
+            ]);
+           }
+        }
     }
 
     private function storeMessageId($chatId, $messageId)
