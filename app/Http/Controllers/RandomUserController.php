@@ -77,7 +77,7 @@ class RandomUserController extends Controller
             'state'=>'await_phone',
         ]);
         $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
-        $btn = [['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]];
+        $btn = ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
@@ -91,7 +91,12 @@ class RandomUserController extends Controller
         $regions = Region::where('status',1)->get();
         $inlineKeyboard = [];
         foreach ($regions as $region) {
-            $inlineKeyboard[] = ['text' => $region->name,'callback_data' => 'product_' . $region->id,];
+            $inlineKeyboard[] = [
+                [
+                    'text' => $region->name,
+                    'callback_data' => 'product_' . $region->id,
+                ],
+            ];
         }
         $text = 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!';
         $btnName = 'inline_keyboard';
@@ -142,9 +147,9 @@ class RandomUserController extends Controller
             'text'=>$text,
             'reply_markup' => json_encode([
                 $btnName => [
-
+                    [
                         $btn
-
+                    ]
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
