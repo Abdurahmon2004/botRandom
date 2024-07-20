@@ -77,7 +77,7 @@ class RandomUserController extends Controller
             'state'=>'await_phone',
         ]);
         $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
-        $btn = ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true];
+        $btn = [['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
@@ -149,7 +149,7 @@ class RandomUserController extends Controller
                 $btnName => [
 
                         $btn
-                    
+
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
