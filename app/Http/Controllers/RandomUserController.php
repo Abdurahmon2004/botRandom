@@ -23,7 +23,7 @@ class RandomUserController extends Controller
             }
 
             if ($chatId && $data) {
-                $this->handleCallbackQuery($chatId, $data, $messageId,$text);
+                $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
                 $user = TgUser::where('telegram_id', $chatId)->where('state', 'await_phone')->first();
@@ -57,7 +57,7 @@ class RandomUserController extends Controller
             }
         }
     }
-    public function handleCallbackQuery($chatId, $data, $messageId,$text)
+    public function handleCallbackQuery($chatId, $data, $messageId)
     {
         if (strpos($data, 'region_') === 0) {
             $regionId = str_replace('region_', '', $data);
@@ -168,16 +168,16 @@ class RandomUserController extends Controller
             ]);
 
             $text = "Viloyatingiz muvaffaqiyatli saqlandi. Qaysi maxsulotni sotib olganizni pastdagi tugmani bosing!";
-            $products = Product::where('status', 1)->get();
-            $inlineKeyboard = [];
-            foreach ($products as $product) {
-                $inlineKeyboard[] = [
-                    [
-                        'text' => $product->name,
-                        'callback_data' => 'region_' . $product->id,
-                    ],
-                ];
-            }
+            // $products = Product::where('status', 1)->get();
+            // $inlineKeyboard = [];
+            // foreach ($products as $product) {
+            //     $inlineKeyboard[] = [
+            //         [
+            //             'text' => $product->name,
+            //             'callback_data' => 'region_' . $product->id,
+            //         ],
+            //     ];
+            // }
         } else {
             $text = "Noma'lum viloyat.";
         }
