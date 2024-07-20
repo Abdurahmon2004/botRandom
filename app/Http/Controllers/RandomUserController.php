@@ -53,7 +53,7 @@ class RandomUserController extends Controller
             }
         } else {
             if ($text == '/start') {
-                $this->startMessage($chatId, false);
+                $this->startMessage($chatId, false,$messageId);
             }
         }
     }
@@ -61,7 +61,7 @@ class RandomUserController extends Controller
     {
         if (strpos($data, 'region_') === 0) {
             $regionId = str_replace('region_', '', $data);
-            $this->saveRegion($chatId, $regionId);
+            $this->saveRegion($chatId, $regionId,$messageId);
         } else {
             switch ($data) {
                 case 'fio':
@@ -70,14 +70,16 @@ class RandomUserController extends Controller
             }
         }
     }
-    public function startMessage($chatId, $user)
+    public function startMessage($chatId, $user,$messageId)
     {
         if (!$user) {
             TgUser::create([
                 'telegram_id' => $chatId,
             ]);
         }
-        Telegram::sendMessage([
+        $this->deleteMessage($chatId, $messageId);
+
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
             'reply_markup' => json_encode([
@@ -88,10 +90,12 @@ class RandomUserController extends Controller
                 ],
             ]),
         ]);
+        $this->storeMessageId($chatId, $message['message_id']);
     }
 
     public function nameAwait($chatId, $messageId)
     {
+        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $user->update([
             'state' => 'await_fio',
@@ -102,9 +106,10 @@ class RandomUserController extends Controller
     public function phoneMessageSaveName($chatId, $text, $messageId)
     {
         if ($text == '/start') {
-            $this->startMessage($chatId, true);
+            $this->startMessage($chatId, true,$messageId);
             return;
         }
+        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         if ($text != '/start') {
             $user->update([
@@ -112,7 +117,7 @@ class RandomUserController extends Controller
                 'state' => 'await_phone',
             ]);
         }
-        Telegram::sendMessage([
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish tugmasini bosing!"',
             'reply_markup' => json_encode([
@@ -125,6 +130,8 @@ class RandomUserController extends Controller
                 'one_time_keyboard' => true,
             ]),
         ]);
+        $this->storeMessageId($chatId, $message['message_id']);
+
     }
     public function savePhone($chatId, $contact, $text, $messageId)
     {
@@ -132,6 +139,7 @@ class RandomUserController extends Controller
             $this->phoneMessageSaveName($chatId, false, $messageId);
             return;
         }
+        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
         $user->update([
@@ -149,15 +157,16 @@ class RandomUserController extends Controller
                 ],
             ];
         }
-        Telegram::sendMessage([
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!',
             'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
         ]);
-
+        $this->storeMessageId($chatId, $message['message_id']);
     }
-    public function saveRegion($chatId, $regionId)
+    public function saveRegion($chatId, $regionId,$messageId)
     {
+        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $region = Region::find($regionId);
 
@@ -183,23 +192,26 @@ class RandomUserController extends Controller
         }
 
 
-        Telegram::sendMessage([
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => $text,
             'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
         ]);
+        $this->storeMessageId($chatId, $message['message_id']);
     }
 
     public function sendMessage($chatId, $message, $messageId)
     {
-        Telegram::sendMessage([
+        $this->deleteMessage($chatId, $messageId);
+        $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => $message,
         ]);
+        $this->storeMessageId($chatId, $message['message_id']);
     }
     private function deleteMessage($chatId, $messageId)
     {
-        Telegram::deleteMessage([
+         Telegram::deleteMessage([
             'chat_id' => $chatId,
             'message_id' => $messageId,
         ]);
