@@ -147,9 +147,9 @@ class RandomUserController extends Controller
             'text'=>$text,
             'reply_markup' => json_encode([
                 $btnName => [
-                    [
+
                         $btn
-                    ],
+                    
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
