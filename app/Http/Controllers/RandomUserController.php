@@ -75,7 +75,9 @@ class RandomUserController extends Controller
                 'telegram_id' => $chatId,
             ]);
         }
-        $this->deleteMessage($chatId, $messageId);
+        if ($messageId) {
+            $this->deleteMessage($chatId, $messageId);
+        }
         $message = Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
@@ -217,26 +219,12 @@ class RandomUserController extends Controller
     private function storeMessageId($chatId, $messageId)
     {
         $user = TgUser::where('telegram_id', $chatId)->first();
-        if (!$user) {
-            TgUser::create([
-                'telegram_id' => $chatId,
+        if($user){
+            UserChat::create([
+                'chat_id'=>$chatId,
+                'message_id'=>$messageId,
             ]);
         }
-        if ($messageId) {
-            $this->deleteMessage($chatId, $messageId);
-        }
-        $message = Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
-            'reply_markup' => json_encode([
-                'inline_keyboard' => [
-                    [
-                        ['text' => 'Ism va Familiya kiritish!', 'callback_data' => 'fio'],
-                    ],
-                ],
-            ]),
-        ]);
-        $this->storeMessageId($chatId, $message['message_id']);
     }
 }
 
