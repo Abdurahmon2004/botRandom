@@ -31,7 +31,7 @@ class RandomUserController extends Controller
         if($user){
             switch ($user->state) {
                 case 'await_fio':
-                    $this->saveName($chatId,$text,$messageId);
+                    $this->phoneMessageSaveName($chatId,$text,$messageId);
                 break;
             }
         }else{
@@ -60,11 +60,7 @@ class RandomUserController extends Controller
                 'inline_keyboard' => [
                     [
                         ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
-                ],
-                [
-                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
-                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio']
-                 ],
+                    ],
                 ]
             ])
         ]);
@@ -78,17 +74,19 @@ class RandomUserController extends Controller
         $message = 'Ism va Familiyangizni kiriting!!';
         $this->sendMessage($chatId,$message,$messageId);
     }
-    public function saveName($chatId,$text,$messageId){
-
-    }
-    public function phoneMessage($chatId,$messageId){
+    public function phoneMessageSaveName($chatId,$text,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $user->update([
+            'name'=>$text
+        ]);
         Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
-                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
-
+                    [
+                        ['text' => 'Telefon raqam ulashish', 'callback_contact' => true],
+                    ]
                 ]
             ])
         ]);
