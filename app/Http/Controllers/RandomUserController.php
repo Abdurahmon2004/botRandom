@@ -64,7 +64,7 @@ class RandomUserController extends Controller
             switch ($data) {
                 case 'fio':
                     $this->nameAwait($chatId, $messageId);
-                break;
+            break;
             }
         }
     }
@@ -110,7 +110,6 @@ class RandomUserController extends Controller
     {
         if ($text == '/start') {
             $this->startMessage($chatId, true,$messageId);
-            return;
         }
         $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
