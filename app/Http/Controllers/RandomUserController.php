@@ -82,6 +82,7 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
                 ]
             ])
         ]);
