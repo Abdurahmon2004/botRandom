@@ -40,7 +40,7 @@ class RandomUserController extends Controller
     public function handleCallbackQuery($chatId,$data, $messageId){
         switch ($data) {
             case 'fio':
-
+                $this->nameAwait($chatId,$messageId);
                 break;
 
             default:
@@ -63,6 +63,20 @@ class RandomUserController extends Controller
         ]);
     }
 
+    public function nameAwait($chatId,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $user->update([
+            'state'=>'await_fio'
+        ]);
+        $message = 'Ism va Familiyangizni kiriting!!';
+        $this->sendMessage($chatId,$message,$messageId);
+    }
+    public function sendMessage($chatId, $message,$messageId){
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>$message,
+        ]);
+    }
     private function deleteMessage($chatId, $messageId)
 {
     Telegram::deleteMessage([
