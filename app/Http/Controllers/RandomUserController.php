@@ -54,14 +54,16 @@ class RandomUserController extends Controller
             'telegram_id'=>$chatId
         ]);
         Telegram::sendMessage([
-            'chat_id'=>$chatId,
-            'text'=>'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
+            'chat_id' => $chatId,
+            'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing!',
             'reply_markup' => json_encode([
-                'inline_keyboard' => [
+                'keyboard' => [
                     [
-                        ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'fio'],
+                        ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true],
                     ],
-                ]
+                ],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true
             ])
         ]);
     }
