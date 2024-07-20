@@ -26,7 +26,7 @@ class RandomUserController extends Controller
         if($user){
             switch ($user->state) {
                 case 'await_name':
-
+                    $this->saveName($chatId,$text,$messageId,$user);
                 break;
             }
         }else{
@@ -42,19 +42,36 @@ class RandomUserController extends Controller
     public function start($chatId,$messageId,$user){
         if(!$user){
             TgUser::create([
-                'telegram_id'=>$chatId
+                'telegram_id'=>$chatId,
+                'state'=>'await_name'
             ]);
         }
-        $text = 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!';
-        $btn = ['text' => 'Ism va Familiya kiritish!', 'callback_data' => 'fio'];
-        $this->sendMessage($chatId,$text,$btn,$messageId);
+        $text = 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiriting!';
+        $this->sendMessage($chatId,$text,$messageId);
     }
-    public function sendMessage($chatId,$text,$btn,$messageId){
+
+    public function saveName($chatId,$text,$messageId,$user){
+        $user->update([
+            'name'=>$text
+        ]);
+        $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
+        $btn = ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true];
+        $btnName = 'keyboard';
+        $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
+    }
+
+    public function sendMessage($chatId,$text,$messageId){
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>$text,
+        ]);
+    }
+    public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
         Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>$text,
             'reply_markup' => json_encode([
-                'inline_keyboard' => [
+                $btnName => [
                     [
                         $btn
                     ],
