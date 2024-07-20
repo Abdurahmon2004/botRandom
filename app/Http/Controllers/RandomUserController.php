@@ -132,9 +132,6 @@ class RandomUserController extends Controller
     }
     public function savePhone($chatId, $contact, $text, $messageId)
     {
-        if ($text == '/start') {
-            $this->phoneMessageSaveName($chatId, false, $messageId);
-        }
         $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
