@@ -84,10 +84,12 @@ class RandomUserController extends Controller
 
     public function savePhone($chatId,$contact,$messageId){
         $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'phone'=>$contact['phone_number'],
-            'state'=>'await_region'
-        ]);
+        if($contact){
+            $user->update([
+                'phone'=>$contact['phone_number'],
+                'state'=>'await_region'
+            ]);
+        }
         $regions = Region::where('status',1)->get();
         $btn = [];
         foreach ($regions as $region) {
@@ -113,11 +115,11 @@ class RandomUserController extends Controller
                 'state' => 'await_code',
             ]);
 
-            $text = "Viloyatingiz muvaffaqiyatli saqlandi. Qaysi maxsulotni sotib olganizni tanlang. Pastdagi tugmalar orqali!";
+            $message = "Viloyatingiz muvaffaqiyatli saqlandi. Pastdagi tugmalar orqali! Qaysi maxsulotni sotib olganizni tanlang. ";
             $products = Product::where('status', 1)->get();
-            $inlineKeyboard = [];
+            $btn = [];
             foreach ($products as $product) {
-                $inlineKeyboard[] = [
+                $btn[] = [
                     [
                         'text' => $product->name,
                         'callback_data' => 'product_' . $product->id,
@@ -126,14 +128,10 @@ class RandomUserController extends Controller
             }
         } else {
             $text = "Noma'lum viloyat.";
+            $this->savePhone($chatId,false,$messageId);
         }
-
-
-        $message = Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => $text,
-            'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
-        ]);
+        $btnName = 'inline_keyboard';
+        $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
     public function sendMessage($chatId,$text,$messageId){
         Telegram::sendMessage([
