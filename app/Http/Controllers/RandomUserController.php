@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Region;
 use App\Models\TgUser;
+use App\Models\UserChat;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -110,6 +111,7 @@ class RandomUserController extends Controller
             return;
         }
         $this->deleteMessage($chatId, $messageId);
+        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         if ($text != '/start') {
             $user->update([
@@ -140,6 +142,7 @@ class RandomUserController extends Controller
             return;
         }
         $this->deleteMessage($chatId, $messageId);
+        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
         $user->update([
@@ -167,6 +170,7 @@ class RandomUserController extends Controller
     public function saveRegion($chatId, $regionId,$messageId)
     {
         $this->deleteMessage($chatId, $messageId);
+        $this->deleteMessage($chatId, $messageId-1);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $region = Region::find($regionId);
 
@@ -211,18 +215,18 @@ class RandomUserController extends Controller
     }
     private function deleteMessage($chatId, $messageId)
     {
-         for ($i=0; $i < 2 ; $i++) {
-            Telegram::deleteMessage([
-                'chat_id' => $chatId,
-                'message_id' => $messageId-$i,
-            ]);
-         }
+         UserChat::where('chat_id',$chatId)->delete();
     }
 
     private function storeMessageId($chatId, $messageId)
     {
         $user = TgUser::where('telegram_id', $chatId)->first();
-        $user->update(['last_message_id' => $messageId]);
+        if($user){
+            UserChat::create([
+                'chat_id'=>$chatId,
+                'message_id'=>$messageId,
+            ]);
+        }
     }
 }
 
