@@ -16,13 +16,16 @@ class RandomUserController extends Controller
             $text = $update['message']['text'] ?? null;
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
-
+            $contact = $update['message']['contact'] ?? null;
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
 
             if ($chatId && $data) {
                 $this->handleCallbackQuery($chatId, $data, $messageId);
+            }
+            if($chatId && $contact){
+                $this->savePhone($chatId,$contact);
             }
         }
     }
@@ -55,7 +58,7 @@ class RandomUserController extends Controller
         ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
-            'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Telefon raqamingizni kiritish uchun pastdagi tugmani bosing!',
+            'text' => 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish tugmasini bosing!"',
             'reply_markup' => json_encode([
                 'keyboard' => [
                     [
@@ -91,6 +94,13 @@ class RandomUserController extends Controller
                     ],
                 ]
             ])
+        ]);
+    }
+    public function savePhone($chatId,$contact){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        $phone = $contact['phone_number'];
+        $user->update([
+            'phone'=>$phone
         ]);
     }
     public function sendMessage($chatId, $message,$messageId){
