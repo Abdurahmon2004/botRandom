@@ -211,10 +211,12 @@ class RandomUserController extends Controller
     }
     private function deleteMessage($chatId, $messageId)
     {
-         Telegram::deleteMessage([
-            'chat_id' => $chatId,
-            'message_id' => $messageId,
-        ]);
+         for ($i=0; $i < 2 ; $i++) {
+            Telegram::deleteMessage([
+                'chat_id' => $chatId,
+                'message_id' => $messageId-$i,
+            ]);
+         }
     }
 
     private function storeMessageId($chatId, $messageId)
