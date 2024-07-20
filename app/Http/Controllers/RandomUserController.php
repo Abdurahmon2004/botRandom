@@ -31,7 +31,8 @@ class RandomUserController extends Controller
         if($user){
             switch ($user->state) {
                 case 'await_fio':
-                    break;
+                    $this->saveName($chatId,$text,$messageId);
+                break;
             }
         }else{
             $this->startMessage($chatId);
@@ -71,13 +72,16 @@ class RandomUserController extends Controller
         $message = 'Ism va Familiyangizni kiriting!!';
         $this->sendMessage($chatId,$message,$messageId);
     }
+    public function saveName($chatId,$text,$messageId){
+
+    }
     public function phoneMessage($chatId,$messageId){
         Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
-                    [['text' => 'Ism va Familiya kiritish', 'request_contact' => true]],
+                    ['text' => 'Ism va Familiya kiritish', 'callback_data' => 'phone'],
                 ]
             ])
         ]);
