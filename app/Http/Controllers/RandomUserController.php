@@ -91,12 +91,7 @@ class RandomUserController extends Controller
         $regions = Region::where('status',1)->get();
         $inlineKeyboard = [];
         foreach ($regions as $region) {
-            $inlineKeyboard[] = [
-                [
-                    'text' => $region->name,
-                    'callback_data' => 'product_' . $region->id,
-                ],
-            ];
+            $inlineKeyboard[] = ['text' => $region->name,'callback_data' => 'product_' . $region->id,];
         }
         $text = 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!';
         $btnName = 'inline_keyboard';
