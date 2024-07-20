@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\code;
+use App\Models\Region;
 use App\Models\TgUser;
 use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -24,37 +24,66 @@ class RandomUserController extends Controller
             if ($chatId && $data) {
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
-            if($chatId && $contact){
-                $this->savePhone($chatId,$contact);
+            if ($chatId && $contact) {
+                $this->savePhone($chatId, $contact);
             }
         }
     }
-    public function handleMessage($chatId, $text, $messageId){
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        if($user){
+    public function handleMessage($chatId, $text, $messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        if ($user) {
             switch ($user->state) {
                 case 'await_fio':
-                    $this->phoneMessageSaveName($chatId,$text,$messageId);
-                break;
+                    $this->phoneMessageSaveName($chatId, $text, $messageId);
+                    break;
             }
-        }else{
-            $this->startMessage($chatId);
+        } else {
+            if($text == '/start'){
+                $this->startMessage($chatId);
+            }
         }
     }
-    public function handleCallbackQuery($chatId,$data, $messageId){
+    public function handleCallbackQuery($chatId, $data, $messageId)
+    {
         switch ($data) {
             case 'fio':
-                $this->nameAwait($chatId,$messageId);
-                break;
-
-            default:
-                # code...
-                break;
+                $this->nameAwait($chatId, $messageId);
+            break;
         }
     }
-    public function startMessage($chatId){
+    public function startMessage($chatId)
+    {
         TgUser::create([
-            'telegram_id'=>$chatId
+            'telegram_id' => $chatId,
+        ]);
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
+            'reply_markup' => json_encode([
+                'inline_keyboard' => [
+                    [
+                        ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true],
+                    ],
+                ],
+            ]),
+        ]);
+    }
+
+    public function nameAwait($chatId, $messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update([
+            'state' => 'await_fio',
+        ]);
+        $message = 'Ism va Familiyangizni kiriting!!';
+        $this->sendMessage($chatId, $message, $messageId);
+    }
+    public function phoneMessageSaveName($chatId, $text, $messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update([
+            'name' => $text,
         ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
@@ -62,66 +91,53 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'keyboard' => [
                     [
-                        ['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true],
+                        ['text' => 'Telefon raqamingizni kiriting', 'callback_data' => 'fio'],
                     ],
                 ],
                 'resize_keyboard' => true,
-                'one_time_keyboard' => true
-            ])
+                'one_time_keyboard' => true,
+            ]),
         ]);
     }
-
-    public function nameAwait($chatId,$messageId){
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'state'=>'await_fio'
-        ]);
-        $message = 'Ism va Familiyangizni kiriting!!';
-        $this->sendMessage($chatId,$message,$messageId);
-    }
-    public function phoneMessageSaveName($chatId,$text,$messageId){
-        $user = TgUser::where('telegram_id',$chatId)->first();
-        $user->update([
-            'name'=>$text
-        ]);
-        Telegram::sendMessage([
-            'chat_id'=>$chatId,
-            'text'=>'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiritish uchun pastdagi tugmani bosing!',
-            'reply_markup' => json_encode([
-                'inline_keyboard' => [
-                    [
-                        ['text' => 'Telefon raqamingizni kiriting',  'request_contact' => true],
-                    ],
-                ]
-            ])
-        ]);
-    }
-    public function savePhone($chatId,$contact){
-        $user = TgUser::where('telegram_id',$chatId)->first();
+    public function savePhone($chatId, $contact)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
         $phone = $contact['phone_number'];
         $user->update([
-            'phone'=>$phone
+            'phone' => $phone,
+        ]);
+        $regions = Region::where('status', 1)->get();
+        $keyboard = [];
+
+        foreach ($regions as $region) {
+            $keyboard[] = [['text' => $region->name]];
+        }
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Telefon raqam muvaffaqiyatli saqlandi. Pastdagi royhatdan Viloyatingizni tanlang!',
+            'reply_markup' => json_encode(['inline_keyboard' => [$keyboard]]),
         ]);
     }
-    public function sendMessage($chatId, $message,$messageId){
+    public function sendMessage($chatId, $message, $messageId)
+    {
         Telegram::sendMessage([
-            'chat_id'=>$chatId,
-            'text'=>$message,
+            'chat_id' => $chatId,
+            'text' => $message,
         ]);
     }
     private function deleteMessage($chatId, $messageId)
-{
-    Telegram::deleteMessage([
-        'chat_id' => $chatId,
-        'message_id' => $messageId,
-    ]);
-}
+    {
+        Telegram::deleteMessage([
+            'chat_id' => $chatId,
+            'message_id' => $messageId,
+        ]);
+    }
 
-private function storeMessageId($chatId, $messageId)
-{
-    $user = TgUser::where('telegram_id', $chatId)->first();
-    $user->update(['last_message_id' => $messageId]);
-}
+    private function storeMessageId($chatId, $messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $user->update(['last_message_id' => $messageId]);
+    }
 }
 
 //
