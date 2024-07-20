@@ -96,13 +96,18 @@ class RandomUserController extends Controller
 
     public function nameAwait($chatId, $messageId)
     {
-        $this->deleteMessage($chatId, $messageId);
         $user = TgUser::where('telegram_id', $chatId)->first();
         $user->update([
             'state' => 'await_fio',
         ]);
+        $this->deleteMessage($chatId, $messageId);
         $message = 'Ism va Familiyangizni kiriting!!';
-        $this->sendMessage($chatId, $message, $messageId);
+        $this->deleteMessage($chatId, $messageId);
+        $message = Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => $message,
+        ]);
+        $this->storeMessageId($chatId, $message['message_id']);
     }
     public function phoneMessageSaveName($chatId, $text, $messageId)
     {
@@ -200,16 +205,6 @@ class RandomUserController extends Controller
             'chat_id' => $chatId,
             'text' => $text,
             'reply_markup' => json_encode(['inline_keyboard' => $inlineKeyboard]),
-        ]);
-        $this->storeMessageId($chatId, $message['message_id']);
-    }
-
-    public function sendMessage($chatId, $message, $messageId)
-    {
-        $this->deleteMessage($chatId, $messageId);
-        $message = Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => $message,
         ]);
         $this->storeMessageId($chatId, $message['message_id']);
     }
