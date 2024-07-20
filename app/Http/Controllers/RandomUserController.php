@@ -25,7 +25,10 @@ class RandomUserController extends Controller
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
-                $this->savePhone($chatId, $contact);
+                $user = TgUser::where('telegram_id',$chatId)->where('state','await_phone')->first();
+                if($user){
+                    $this->savePhone($chatId, $contact);
+                }
             }
         }
     }
@@ -33,10 +36,14 @@ class RandomUserController extends Controller
     {
         $user = TgUser::where('telegram_id', $chatId)->first();
         if ($user) {
+
             switch ($user->state) {
                 case 'await_fio':
+                    if($text == '/start'){
+                        $this->startMessage($chatId);
+                    }
                     $this->phoneMessageSaveName($chatId, $text, $messageId);
-                    break;
+                break;
             }
         } else {
             if ($text == '/start') {
@@ -46,10 +53,11 @@ class RandomUserController extends Controller
     }
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
+
         switch ($data) {
             case 'fio':
                 $this->nameAwait($chatId, $messageId);
-                break;
+            break;
         }
     }
     public function startMessage($chatId)
@@ -63,7 +71,7 @@ class RandomUserController extends Controller
             'reply_markup' => json_encode([
                 'inline_keyboard' => [
                     [
-                        ['text' => 'Telefon raqamingizni kiriting', 'callback_data' => 'fio'],
+                        ['text' => 'Ism va Familiya kiritish!', 'callback_data' => 'fio'],
                     ],
                 ],
             ]),
@@ -84,6 +92,7 @@ class RandomUserController extends Controller
         $user = TgUser::where('telegram_id', $chatId)->first();
         $user->update([
             'name' => $text,
+            'state' => 'await_phone',
         ]);
         Telegram::sendMessage([
             'chat_id' => $chatId,
