@@ -91,7 +91,7 @@ class RandomUserController extends Controller
             $this->startMessage($chatId,true);
         }
         $user = TgUser::where('telegram_id', $chatId)->first();
-       if($text){
+       if($text == '/start'){
         $user->update([
             'name' => $text,
             'state' => 'await_phone',
