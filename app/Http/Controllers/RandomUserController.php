@@ -110,7 +110,7 @@ class RandomUserController extends Controller
         $keyboard = [];
 
         foreach ($regions as $region) {
-            $keyboard[] = [['text' => $region->name]];
+            $keyboard[] = ['text' => $region->name];
         }
         Telegram::sendMessage([
             'chat_id' => $chatId,
