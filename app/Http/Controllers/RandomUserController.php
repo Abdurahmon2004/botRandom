@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
 use Illuminate\Http\Request;
@@ -52,11 +53,10 @@ class RandomUserController extends Controller
             $regionId = str_replace('region_', '', $data);
             $this->saveRegion($chatId, $regionId,$user,$messageId);
         }
-        // switch ($data) {
-        //     case '':
-
-        //         break;
-        // }
+        if (strpos($data, 'product_') === 0) {
+            $productId = str_replace('product_', '', $data);
+            $this->saveProduct($chatId, $productId,$user,$messageId);
+        }
     }
 
 
@@ -132,6 +132,21 @@ class RandomUserController extends Controller
         }
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
+    }
+    public function saveProduct($chatId, $productId,$user,$messageId)
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        $product = Product::find($productId);
+        if ($product) {
+            ProductUser::create([
+                'user_id'=>$user->id,
+                'product_id'=>$product->id,
+            ]);
+            $message = "Hammasi yaxshi o'tdi endi.Himoya qatlami ostidagi kodni kiriting";
+        }else{
+            $message = 'Bunday maxsulot topilmadi!';
+        }
+        $this->sendMessage($chatId,$message,$messageId);
     }
     public function sendMessage($chatId,$text,$messageId){
         Telegram::sendMessage([
