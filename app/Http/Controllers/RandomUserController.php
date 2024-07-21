@@ -51,7 +51,7 @@ class RandomUserController extends Controller
                         $this->saveRegion($chatId, $user->region_id,false,$messageId);
                     break;
                     case 'await_code':
-                        $this->saveCode($chatId, $text,$user,$messageId);
+                        $this->Code($chatId, $text,$user,$messageId);
                     break;
                 }
             }
@@ -87,7 +87,7 @@ class RandomUserController extends Controller
             $this->saveProduct($chatId, $productId,$user,$messageId);
         }
         if($data == 'code'){
-            $this->saveCode($chatId, $data,$user,$messageId);
+            $this->Code($chatId, $data,$user,$messageId);
         }
     }
 
@@ -193,7 +193,7 @@ class RandomUserController extends Controller
         }
 
     }
-    public function saveCode($chatId, $text,$user,$messageId)
+    public function Code($chatId, $text,$user,$messageId)
     {
         $message = "Himoya qatlami ostidagi kodni kiriting";
         $user->update([
@@ -221,6 +221,9 @@ class RandomUserController extends Controller
             $this->sendMessageBtn($chatId, $message,$btn,$btnName,$messageId);
         }else if($code->status == 0){
             $message = 'Bu kod oldin foydanalingan. Boshqa kod bolsa kiriting';
+            $this->sendMessage($chatId,$message,$messageId);
+        }else{
+            $message = 'Notogri kod kiritdingiz. Boshqa kod bolsa kiriting';
             $this->sendMessage($chatId,$message,$messageId);
         }
     }
