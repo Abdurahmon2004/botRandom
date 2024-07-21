@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Code;
+use App\Models\CodeUser;
 use App\Models\Product;
 use App\Models\ProductUser;
 use App\Models\Region;
@@ -37,6 +39,9 @@ class RandomUserController extends Controller
                 case 'await_name':
                     $this->saveName($chatId,$text,$messageId,$user);
                 break;
+                case 'await_code':
+                    $this->codeSave($chatId,$text,$messageId,$user);
+                break;
             }
         }else{
             switch ($text) {
@@ -57,10 +62,14 @@ class RandomUserController extends Controller
             $productId = str_replace('product_', '', $data);
             $this->saveProduct($chatId, $productId,$user,$messageId);
         }
+        if($data == 'code'){
+            $this->saveCode($chatId, $data,$user,$messageId);
+        }
     }
 
 
-    public function start($chatId,$messageId,$user){
+    public function start($chatId,$messageId,$user)
+    {
         if(!$user){
             TgUser::create([
                 'telegram_id'=>$chatId,
@@ -71,7 +80,8 @@ class RandomUserController extends Controller
         $this->sendMessage($chatId,$text,$messageId);
     }
 
-    public function saveName($chatId,$text,$messageId,$user){
+    public function saveName($chatId,$text,$messageId,$user)
+    {
         $user->update([
             'name'=>$text,
             'state'=>'await_phone',
@@ -82,7 +92,8 @@ class RandomUserController extends Controller
         $this->sendMessageBtn($chatId,$message,$btn,$btnName,$messageId);
     }
 
-    public function savePhone($chatId,$contact,$messageId){
+    public function savePhone($chatId,$contact,$messageId)
+    {
         $user = TgUser::where('telegram_id',$chatId)->first();
         if($contact){
             $user->update([
@@ -112,7 +123,7 @@ class RandomUserController extends Controller
         if ($region) {
             $user->update([
                 'region_id' => $region->id,
-                'state' => 'await_code',
+                'state' => 'await_product',
             ]);
 
             $message = "Viloyatingiz muvaffaqiyatli saqlandi. Pastdagi tugmalar orqali! Qaysi maxsulotni sotib olganizni tanlang. ";
@@ -135,18 +146,49 @@ class RandomUserController extends Controller
     }
     public function saveProduct($chatId, $productId,$user,$messageId)
     {
-        $user = TgUser::where('telegram_id', $chatId)->first();
         $product = Product::find($productId);
         if ($product) {
             ProductUser::create([
                 'user_id'=>$user->id,
                 'product_id'=>$product->id,
             ]);
+            $user->update([
+                'state'=>'await_code'
+            ]);
             $message = "Hammasi yaxshi o'tdi endi.Himoya qatlami ostidagi kodni kiriting";
         }else{
             $message = 'Bunday maxsulot topilmadi!';
         }
         $this->sendMessage($chatId,$message,$messageId);
+    }
+    public function saveCode($chatId, $text,$user,$messageId)
+    {
+        $message = "Himoya qatlami ostidagi kodni kiriting";
+        $user->update([
+            'state'=>'await_code'
+        ]);
+    }
+    public function codeSave($chatId,$text,$messageId,$user){
+        $code = Code::where('code',$text)->first();
+        if($code->status == 1){
+            CodeUser::create([
+                'user_id'=>$user->id,
+                'code_id'=>$code->id,
+            ]);
+            $user->update([
+                'state'=>'finish'
+            ]);
+            $count = CodeUser::where('user_id',$user->id)->get()->count();
+            $btnName = 'inline_keyboard';
+            $btn = [
+                [['text'=>'Kanalni korish', 'url'=>'https://t.me/abdurohman_karimjonov']],
+                [['text'=>'Yana kod kiritish!', 'callback_data'=>'code']],
+            ];
+            $message = 'Malumotlar muvaffaqiyatli saqlandi.Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: '.$count;
+            $this->sendMessageBtn($chatId, $message,$btn,$btnName,$messageId);
+        }else if($code->status == 0){
+
+        }
     }
     public function sendMessage($chatId,$text,$messageId){
         Telegram::sendMessage([
