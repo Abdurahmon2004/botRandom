@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id')->nullable();
             $table->integer('code_id')->default(1);
+            $table->integer('region_id')->nullable();
             $table->timestamps();
         });
     }

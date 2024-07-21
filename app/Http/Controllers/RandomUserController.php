@@ -208,6 +208,10 @@ class RandomUserController extends Controller
                 CodeUser::create([
                     'user_id'=>$user->id,
                     'code_id'=>$code->id,
+                    'region_id'=>$user->region_id,
+                ]);
+                $code->update([
+                    'status'=>0
                 ]);
                 $user->update([
                     'state'=>'finish'
