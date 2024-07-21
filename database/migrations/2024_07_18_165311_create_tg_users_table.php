@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('name')->nullable();
             $table->string('state')->nullable();
-            $table->boolean('is_finished')->nullable();
-            $table->string('last_message_id')->nullable();
             $table->timestamps();
         });
     }

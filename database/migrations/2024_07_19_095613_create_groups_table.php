@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('product_id')->nullable();
             $table->string('name')->nullable();
-            $table->string('status')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }

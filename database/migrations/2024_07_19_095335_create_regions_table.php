@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('status')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }
