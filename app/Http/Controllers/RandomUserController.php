@@ -185,12 +185,13 @@ class RandomUserController extends Controller
                 ]);
            }
             $message = "Hammasi yaxshi o'tdi endi.Himoya qatlami ostidagi kodni kiriting";
+            $this->sendMessage($chatId,$message,$messageId);
         }else{
             $message = 'Bunday maxsulot topilmadi!';
             $user = TgUser::where('telegram_id',$chatId)->first();
             $this->saveRegion($chatId, $user->region_id,false,$messageId);
         }
-        $this->sendMessage($chatId,$message,$messageId);
+
     }
     public function saveCode($chatId, $text,$user,$messageId)
     {
