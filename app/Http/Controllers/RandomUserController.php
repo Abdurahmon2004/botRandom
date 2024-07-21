@@ -199,7 +199,7 @@ class RandomUserController extends Controller
         $user->update([
             'state'=>'await_code'
         ]);
-        $this->sendMessage($chatId,$text,$messageId);
+        $this->sendMessage($chatId,$message,$messageId);
     }
     public function codeSave($chatId,$text,$messageId,$user){
         $code = Code::where('code',$text)->first();
