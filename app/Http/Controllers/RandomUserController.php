@@ -51,7 +51,7 @@ class RandomUserController extends Controller
                         $this->saveRegion($chatId, $user->region_id,false,$messageId);
                     break;
                     case 'await_code':
-                        $this->saveProduct($chatId, $user->product_id,false,$messageId);
+                        $this->saveCode($chatId, $text,$user,$messageId);
                     break;
                 }
             }
@@ -199,6 +199,7 @@ class RandomUserController extends Controller
         $user->update([
             'state'=>'await_code'
         ]);
+        $this->sendMessage($chatId,$text,$messageId);
     }
     public function codeSave($chatId,$text,$messageId,$user){
         $code = Code::where('code',$text)->first();
