@@ -203,27 +203,29 @@ class RandomUserController extends Controller
     }
     public function codeSave($chatId,$text,$messageId,$user){
         $code = Code::where('code',$text)->first();
-        if($code->status == 1){
-            CodeUser::create([
-                'user_id'=>$user->id,
-                'code_id'=>$code->id,
-            ]);
-            $user->update([
-                'state'=>'finish'
-            ]);
-            $count = CodeUser::where('user_id',$user->id)->get()->count();
-            $btnName = 'inline_keyboard';
-            $btn = [
-                [['text'=>'Kanalni korish', 'url'=>'https://t.me/abdurohman_karimjonov']],
-                [['text'=>'Yana kod kiritish!', 'callback_data'=>'code']],
-            ];
-            $message = 'Malumotlar muvaffaqiyatli saqlandi.Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: '.$count;
-            $this->sendMessageBtn($chatId, $message,$btn,$btnName,$messageId);
-        }else if($code->status == 0){
-            $message = 'Bu kod oldin foydanalingan. Boshqa kod bolsa kiriting';
-            $this->sendMessage($chatId,$message,$messageId);
+        if($code){
+            if($code->status == 1){
+                CodeUser::create([
+                    'user_id'=>$user->id,
+                    'code_id'=>$code->id,
+                ]);
+                $user->update([
+                    'state'=>'finish'
+                ]);
+                $count = CodeUser::where('user_id',$user->id)->get()->count();
+                $btnName = 'inline_keyboard';
+                $btn = [
+                    [['text'=>'Kanalni korish', 'url'=>'https://t.me/abdurohman_karimjonov']],
+                    [['text'=>'Yana kod kiritish!', 'callback_data'=>'code']],
+                ];
+                $message = 'Malumotlar muvaffaqiyatli saqlandi.Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: '.$count;
+                $this->sendMessageBtn($chatId, $message,$btn,$btnName,$messageId);
+            }else if($code->status == 0){
+                $message = 'Bu kod oldin foydanalingan. Boshqa kod bolsa kiriting';
+                $this->sendMessage($chatId,$message,$messageId);
+            }
         }else{
-            $message = 'Notogri kod kiritdingiz. Boshqa kod bolsa kiriting';
+            $message = 'Bunday kod mavjud emas. Boshqa kod bolsa kiriting';
             $this->sendMessage($chatId,$message,$messageId);
         }
     }
