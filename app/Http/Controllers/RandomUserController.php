@@ -50,6 +50,9 @@ class RandomUserController extends Controller
                     case 'await_product':
                         $this->saveRegion($chatId, $user->region_id,false,$messageId);
                     break;
+                    case 'await_code':
+                        $this->saveProduct($chatId, $user->product_id,false,$messageId);
+                    break;
                 }
             }
             // botga qayta start bosib yuborsa
@@ -172,13 +175,15 @@ class RandomUserController extends Controller
     {
         $product = Product::find($productId);
         if ($product) {
-            ProductUser::create([
-                'user_id'=>$user->id,
-                'product_id'=>$product->id,
-            ]);
-            $user->update([
-                'state'=>'await_code'
-            ]);
+           if($user){
+                ProductUser::create([
+                    'user_id'=>$user->id,
+                    'product_id'=>$product->id,
+                ]);
+                $user->update([
+                    'state'=>'await_code'
+                ]);
+           }
             $message = "Hammasi yaxshi o'tdi endi.Himoya qatlami ostidagi kodni kiriting";
         }else{
             $message = 'Bunday maxsulot topilmadi!';
