@@ -35,6 +35,20 @@ class RandomUserController extends Controller
     public function handleMessage($chatId, $text, $messageId){
         $user = TgUser::where('telegram_id',$chatId)->first();
         if($user){
+            // botga qayta start bosib yuborsa
+            if($text == '/start'){
+                switch ($user->state) {
+                    case 'await_name':
+                        $this->start($chatId,$messageId,$user);
+                        break;
+
+                    default:
+                        # code...
+                        break;
+                }
+            }
+            // botga qayta start bosib yuborsa
+
             switch ($user->state) {
                 case 'await_name':
                     $this->saveName($chatId,$text,$messageId,$user);
