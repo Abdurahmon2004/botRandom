@@ -44,6 +44,9 @@ class RandomUserController extends Controller
                     case 'await_phone':
                         $this->saveName($chatId,false,$messageId,$user);
                     break;
+                    case 'await_region':
+                        $this->savePhone($chatId,false,$messageId);
+                    break;
                 }
             }
             // botga qayta start bosib yuborsa
