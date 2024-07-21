@@ -40,7 +40,10 @@ class RandomUserController extends Controller
                 switch ($user->state) {
                     case 'await_name':
                         $this->start($chatId,$messageId,$user);
-                        break;
+                    break;
+                    case 'await_phone':
+                        $this->saveName($chatId,false,$messageId,$user);
+                    break;
                 }
             }
             // botga qayta start bosib yuborsa
@@ -94,10 +97,12 @@ class RandomUserController extends Controller
 
     public function saveName($chatId,$text,$messageId,$user)
     {
+       if($text){
         $user->update([
             'name'=>$text,
             'state'=>'await_phone',
         ]);
+       }
         $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
