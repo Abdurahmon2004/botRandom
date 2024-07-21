@@ -96,7 +96,7 @@ class RandomUserController extends Controller
             $btn[] = [
                 [
                     'text' => $region->name,
-                    'callback_data' => 'product_' . $region->id,
+                    'callback_data' => 'region_' . $region->id,
                 ],
             ];
         }
