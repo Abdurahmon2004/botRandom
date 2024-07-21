@@ -41,14 +41,11 @@ class RandomUserController extends Controller
                     case 'await_name':
                         $this->start($chatId,$messageId,$user);
                         break;
-
-                    default:
-                        # code...
-                        break;
                 }
             }
             // botga qayta start bosib yuborsa
 
+           if($text != '/start'){
             switch ($user->state) {
                 case 'await_name':
                     $this->saveName($chatId,$text,$messageId,$user);
@@ -57,6 +54,7 @@ class RandomUserController extends Controller
                     $this->codeSave($chatId,$text,$messageId,$user);
                 break;
             }
+           }
         }else{
             switch ($text) {
                 case '/start':
