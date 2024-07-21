@@ -48,7 +48,7 @@ class RandomUserController extends Controller
                         $this->savePhone($chatId,false,$messageId);
                     break;
                     case 'await_product':
-                        $this->saveRegion($chatId, false,$user,$messageId);
+                        $this->saveRegion($chatId, $user->region_id,false,$messageId);
                     break;
                 }
             }
@@ -141,13 +141,14 @@ class RandomUserController extends Controller
 
     public function saveRegion($chatId, $regionId,$user,$messageId)
     {
-        $user = TgUser::where('telegram_id', $chatId)->first();
         $region = Region::find($regionId);
         if ($region) {
+           if($user){
             $user->update([
                 'region_id' => $region->id,
                 'state' => 'await_product',
             ]);
+           }
 
             $message = "Viloyatingiz muvaffaqiyatli saqlandi. Pastdagi tugmalar orqali! Qaysi maxsulotni sotib olganizni tanlang. ";
             $products = Product::where('status', 1)->get();
