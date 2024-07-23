@@ -264,7 +264,6 @@ class RandomUserController extends Controller
                     'message_id' => $chat->message_id,
                 ]);
             }
-            $chats->delete();
         }
         UserChat::create([
             'chat_id'=>$chatId,
