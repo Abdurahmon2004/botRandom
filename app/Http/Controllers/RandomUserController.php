@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
-use Illuminate\Http\Request;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RandomUserController extends Controller
@@ -55,7 +54,6 @@ class RandomUserController extends Controller
                     break;
                 }
             }
-            // botga qayta start bosib yuborsa
 
            if($text != '/start'){
             switch ($user->state) {
@@ -94,12 +92,7 @@ class RandomUserController extends Controller
 
     public function start($chatId,$messageId,$user)
     {
-        if(!$user){
-            TgUser::create([
-                'telegram_id'=>$chatId,
-                'state'=>'await_name'
-            ]);
-        }
+
         $text = 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiriting!';
         $this->sendMessage($chatId,$text,$messageId);
     }
@@ -234,6 +227,13 @@ class RandomUserController extends Controller
         }
     }
     public function sendMessage($chatId,$text,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        if(!$user){
+            TgUser::create([
+                'telegram_id'=>$chatId,
+                'state'=>'await_name'
+            ]);
+        }
         Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>$text,
