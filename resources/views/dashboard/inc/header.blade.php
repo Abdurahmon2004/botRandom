@@ -101,6 +101,14 @@
                             </ul>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('users') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Foydalanuvchilar
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('regions.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>
@@ -127,14 +135,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('users') }}" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>
-                                    Foydalanuvchilar
-                                </p>
-                            </a>
-                        </li>
+
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
