@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $tg_users = TgUser::paginate(10);
+        $tg_users = TgUser::where('region_id','!=','')->paginate(10);
         if($request->ajax()){
             return view('dashboard.users.ajax-table', compact('tg_users'));
         }
