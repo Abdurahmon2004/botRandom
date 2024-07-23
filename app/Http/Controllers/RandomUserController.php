@@ -245,7 +245,7 @@ class RandomUserController extends Controller
         }
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
-        Telegram::sendMessage([
+        $response = Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>$text,
             'reply_markup' => json_encode([
@@ -254,6 +254,9 @@ class RandomUserController extends Controller
                 'one_time_keyboard' => true,
             ]),
         ]);
+        if ($response && isset($response['message_id'])) {
+            $this->storeMessageUser($chatId, $response['message_id']);
+        }
     }
     public function storeMessageUser($chatId,$messageId){
         $chats = UserChat::where('chat_id',$chatId)->get();
@@ -263,6 +266,7 @@ class RandomUserController extends Controller
                     'chat_id' => $chatId,
                     'message_id' => $chat->message_id,
                 ]);
+                $chat->delete();
             }
         }
         UserChat::create([
