@@ -258,12 +258,14 @@ class RandomUserController extends Controller
     public function storeMessage($chatId,$messageId){
 
             $chats = UserChat::where('chat_id',$chatId)->get();
-            foreach ($chats as $chat) {
-                Telegram::deleteMessage([
-                    'chat_id' => $chatId,
-                    'message_id' => $chat->message_id,
-                ]);
-               }
+            if($chats){
+                foreach ($chats as $chat) {
+                    Telegram::deleteMessage([
+                        'chat_id' => $chatId,
+                        'message_id' => $chat->message_id,
+                    ]);
+                }
+            }
                 UserChat::create([
                     'chat_id'=>$chatId,
                     'message_id'=>$messageId
