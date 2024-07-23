@@ -20,7 +20,7 @@ Route::middleware('admin')->group(function(){
 
     Route::get('/com', function () {
        Artisan::call('optimize');
-       Artisan::call('migrate');
+       Artisan::call('vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider"');
        dd('hello');
     });
     Route::resource('regions', RegionController::class);
