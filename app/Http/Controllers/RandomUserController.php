@@ -240,7 +240,7 @@ class RandomUserController extends Controller
             'chat_id'=>$chatId,
             'text'=>$text,
         ]);
-        $this->storeMessage($chatId,$response['message_id']);
+        // $this->storeMessage($chatId,$response['message_id']);
         Log::info('Telegram response: '.json_encode($response));
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
