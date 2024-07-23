@@ -234,10 +234,11 @@ class RandomUserController extends Controller
                 'state'=>'await_name'
             ]);
         }
-        Telegram::sendMessage([
+        $response = Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>$text,
         ]);
+        \Log::info('Telegram response: '.json_encode($response));
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
         Telegram::sendMessage([
