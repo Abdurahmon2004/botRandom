@@ -231,34 +231,53 @@ class RandomUserController extends Controller
         }
     }
     public function sendMessage($chatId, $text, $messageId)
-{
-    $user = TgUser::where('telegram_id', $chatId)->first();
-    if (!$user) {
-        TgUser::create([
-            'telegram_id' => $chatId,
-            'state' => 'await_name',
-        ]);
+    {
+        $user = TgUser::where('telegram_id', $chatId)->first();
+        if (!$user) {
+            TgUser::create([
+                'telegram_id' => $chatId,
+                'state' => 'await_name',
+            ]);
+        }
+        try {
+            $response = Telegram::editMessageText([
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+                'text' => $text,
+            ]);
+        } catch (\Exception $e) {
+            $response = Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $text,
+            ]);
+        }
+        \Log::info('Telegram response: ' . json_encode($response));
     }
-    $response = Telegram::editMessageText([
-        'chat_id' => $chatId,
-        'message_id' => $messageId,
-        'text' => $text,
-    ]);
-    \Log::info('Telegram response: ' . json_encode($response));
-}
 
-public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
-{
-    $response = Telegram::editMessageText([
-        'chat_id' => $chatId,
-        'message_id' => $messageId,
-        'text' => $text,
-        'reply_markup' => json_encode([
-            $btnName => $btn,
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true,
-        ]),
-    ]);
-    \Log::info('Telegram response: ' . json_encode($response));
-}
+    public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
+    {
+        try {
+            $response = Telegram::editMessageText([
+                'chat_id' => $chatId,
+                'message_id' => $messageId,
+                'text' => $text,
+                'reply_markup' => json_encode([
+                    $btnName => $btn,
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => true,
+                ]),
+            ]);
+        } catch (\Exception $e) {
+            $response = Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $text,
+                'reply_markup' => json_encode([
+                    $btnName => $btn,
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => true,
+                ]),
+            ]);
+        }
+        \Log::info('Telegram response: ' . json_encode($response));
+    }
 }
