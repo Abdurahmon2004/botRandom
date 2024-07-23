@@ -265,7 +265,7 @@ class RandomUserController extends Controller
         //     ]);
         //    }
             UserChat::create([
-                'user_id'=>$user->id,
+                'user_id'=>$chatId,
                 'message_id'=>$messageId
             ]);
         }
