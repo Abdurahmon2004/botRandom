@@ -257,17 +257,17 @@ class RandomUserController extends Controller
     }
     public function storeMessage($chatId,$messageId){
         $user = TgUser::where('telegram_id',$chatId)->first();
-        if($user){
-        //    foreach ($user->chats as $mId) {
-        //     Telegram::deleteMessage([
-        //         'chat_id' => $chatId,
-        //         'message_id' => $mId->message_id,
-        //     ]);
-        //    }
+           if($user){
+            foreach ($user->chats as $mId) {
+                Telegram::deleteMessage([
+                    'chat_id' => $chatId,
+                    'message_id' => $mId->message_id,
+                ]);
+               }
+           }
             UserChat::create([
                 'chat_id'=>$chatId,
                 'message_id'=>$messageId
             ]);
-        }
     }
 }
