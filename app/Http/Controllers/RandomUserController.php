@@ -260,5 +260,5 @@ class RandomUserController extends Controller
             'chat_id'=>$chatId,
             'message_id'=>$messageId,
            ]);
-    // }
+    }
 }
