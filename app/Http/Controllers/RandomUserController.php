@@ -77,13 +77,31 @@ class RandomUserController extends Controller
 
     public function handleCallbackQuery($chatId,$data,$messageId){
         $user = TgUser::where('telegram_id',$chatId)->first();
+            switch ($user->state) {
+                case 'await_name':
+                    $this->start($chatId,$messageId,$user);
+                break;
+                case 'await_phone':
+                    $this->saveName($chatId,false,$messageId,$user);
+                break;
+                case 'await_region':
+                    $this->savePhone($chatId,false,$messageId);
+                break;
+                case 'await_product':
+                    $this->saveRegion($chatId, $user->region_id,false,$messageId);
+                break;
+            }
+       if($user->state == 'await_region'){
         if (strpos($data, 'region_') === 0) {
             $regionId = str_replace('region_', '', $data);
             $this->saveRegion($chatId, $regionId,$user,$messageId);
         }
-        if (strpos($data, 'product_') === 0) {
-            $productId = str_replace('product_', '', $data);
-            $this->saveProduct($chatId, $productId,$user,$messageId);
+       }
+        if($user->state == 'await_product'){
+            if (strpos($data, 'product_') === 0) {
+                $productId = str_replace('product_', '', $data);
+                $this->saveProduct($chatId, $productId,$user,$messageId);
+            }
         }
         if($data == 'code'){
             $this->Code($chatId, $data,$user,$messageId);
