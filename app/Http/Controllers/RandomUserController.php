@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
+use App\Models\UserChat;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RandomUserController extends Controller
@@ -239,6 +240,7 @@ class RandomUserController extends Controller
             'text'=>$text,
         ]);
         \Log::info('Telegram response: '.json_encode($response));
+        $this->storeMessageUser($chatId,$messageId);
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
         Telegram::sendMessage([
@@ -250,5 +252,11 @@ class RandomUserController extends Controller
                 'one_time_keyboard' => true,
             ]),
         ]);
+    }
+    public function storeMessageUser($chatId,$messageId){
+        UserChat::create([
+            'chat_id'=>$chatId,
+            'message_id'=>$messageId,
+           ]);
     }
 }
