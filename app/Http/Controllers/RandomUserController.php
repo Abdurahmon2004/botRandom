@@ -239,6 +239,14 @@ class RandomUserController extends Controller
             'chat_id'=>$chatId,
             'text'=>$text,
         ]);
+        if($response){
+            if(isset($response['message_id'])){
+                UserChat::create([
+                    'chat_id'=>$chatId,
+                    'message_id'=>$response['message_id'],
+                ]);
+            }
+        }
         \Log::info('Telegram response: '.json_encode($response));
         // if ($response && isset($response['message_id'])) {
         //     $this->storeMessageUser($chatId, $response['message_id']);
