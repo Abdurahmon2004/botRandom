@@ -257,7 +257,7 @@ class RandomUserController extends Controller
     }
     public function storeMessageUser($chatId,$messageId){
         UserChat::create([
-            // 'chat_id'=>$chatId,
+            'chat_id'=>$chatId,
             'message_id'=>$messageId,
            ]);
     }
