@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
+use App\Models\UserChat;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RandomUserController extends Controller
@@ -238,10 +240,11 @@ class RandomUserController extends Controller
             'chat_id'=>$chatId,
             'text'=>$text,
         ]);
-        \Log::info('Telegram response: '.json_encode($response));
+        $this->storeMessage($chatId,$response['message_id']);
+        Log::info('Telegram response: '.json_encode($response));
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
-        Telegram::sendMessage([
+       $message = Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>$text,
             'reply_markup' => json_encode([
@@ -250,5 +253,21 @@ class RandomUserController extends Controller
                 'one_time_keyboard' => true,
             ]),
         ]);
+        $this->storeMessage($chatId,$message['message_id']);
+    }
+    public function storeMessage($chatId,$messageId){
+        $user = TgUser::where('telegram_id',$chatId)->first();
+        if($user){
+        //    foreach ($user->chats as $mId) {
+        //     Telegram::deleteMessage([
+        //         'chat_id' => $chatId,
+        //         'message_id' => $mId->message_id,
+        //     ]);
+        //    }
+            UserChat::create([
+                'user_id'=>$user->id,
+                'message_id'=>$messageId
+            ]);
+        }
     }
 }
