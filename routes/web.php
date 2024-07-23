@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomUserController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\UserController;
 use App\Models\UserChat;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,6 @@ Route::middleware('admin')->group(function(){
        dd('hello');
     });
     Route::resource('regions', RegionController::class);
-    Route::get('reg', [RandomUserController::class, 'savePhone']);
 
     Route::resource('products', ProductController::class);
 
@@ -34,5 +34,7 @@ Route::middleware('admin')->group(function(){
     Route::post('/codes-group/{id}',[GroupController::class, 'codesAdd']);
 
     Route::get('/codes/export/{group}', [GroupController::class, 'export'])->name('codes.export');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 require __DIR__.'/auth.php';
