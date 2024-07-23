@@ -240,7 +240,7 @@ class RandomUserController extends Controller
             'text'=>$text,
         ]);
         \Log::info('Telegram response: '.json_encode($response));
-        $this->storeMessageUser($chatId,$messageId);
+        // $this->storeMessageUser($chatId,$messageId);
     }
     public function sendMessageBtn($chatId, $text,$btn,$btnName,$messageId){
         Telegram::sendMessage([
@@ -253,10 +253,10 @@ class RandomUserController extends Controller
             ]),
         ]);
     }
-    public function storeMessageUser($chatId,$messageId){
-        UserChat::create([
-            'chat_id'=>$chatId,
-            'message_id'=>$messageId,
-           ]);
-    }
+    // public function storeMessageUser($chatId,$messageId){
+    //     UserChat::create([
+    //         'chat_id'=>$chatId,
+    //         'message_id'=>$messageId,
+    //        ]);
+    // }
 }
