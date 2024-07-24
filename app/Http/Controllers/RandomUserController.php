@@ -242,8 +242,11 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
                     [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
                 ];
                 $message = 'Malumotlar muvaffaqiyatli saqlandi🥳✅🥳
+
 Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
+
 Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
+
 Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
             } else if ($code->status == 0) {
