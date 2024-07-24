@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
+use App\Models\UserChat;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RandomUserController extends Controller
@@ -28,11 +29,11 @@ class RandomUserController extends Controller
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
-                $user = TgUser::where('state', 'await_phone')->first();
-                if ($user) {
-                    $this->savePhone($chatId, $contact, $messageId);
-                } else {
-                    $this->handleMessage($chatId, '/start', $messageId);
+                $user = TgUser::where('state','await_phone')->first();
+                if($user){
+                    $this->savePhone($chatId,$contact,$messageId);
+                }else{
+                    $this->handleMessage($chatId,'/start',$messageId);
                 }
             }
         }
@@ -144,10 +145,9 @@ Endi Pastda paydo bo\'lgan 👇🏻
             ];
         }
         $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
-    Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
+Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
-        // Telefon raqam ulashish tugmasini olib tashlash uchun clearKeyboard = true
-        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId, true);
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
     public function saveRegion($chatId, $regionId, $user, $messageId)
@@ -248,18 +248,17 @@ Siz kiritgan kodlar soni: ' . $count;
             $this->sendMessage($chatId, $message, $messageId);
         }
     }
-    public function finish($chatId, $user, $messageId)
-    {
+    public function finish($chatId,$user,$messageId){
         $count = CodeUser::where('user_id', $user->id)->get()->count();
-        $btnName = 'inline_keyboard';
-        $btn = [
-            [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
-            [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
-        ];
-        $message = 'Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
+                $btnName = 'inline_keyboard';
+                $btn = [
+                    [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
+                    [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
+                ];
+                $message = 'Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
 Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
 Siz kiritgan kodlar soni: ' . $count;
-        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
+                $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
     public function sendMessage($chatId, $text, $messageId)
     {
@@ -275,40 +274,42 @@ Siz kiritgan kodlar soni: ' . $count;
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
-                'parse_mode' => 'html',
+                'parse_mode' => 'html'
             ]);
         } catch (\Exception $e) {
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
-                'parse_mode' => 'html',
+                'parse_mode' => 'html'
             ]);
         }
         \Log::info('Telegram response: ' . json_encode($response));
     }
 
-    public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId, $clearKeyboard = false)
+    public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
     {
         try {
-            $replyMarkup = $clearKeyboard ? null : json_encode([
-                $btnName => $btn,
-                'resize_keyboard' => true,
-                'one_time_keyboard' => true,
-            ]);
-
             $response = Telegram::editMessageText([
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
                 'parse_mode' => 'html',
-                'reply_markup' => $replyMarkup,
+                'reply_markup' => json_encode([
+                    $btnName => $btn,
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => true,
+                ]),
             ]);
         } catch (\Exception $e) {
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
                 'parse_mode' => 'html',
-                'reply_markup' => $replyMarkup,
+                'reply_markup' => json_encode([
+                    $btnName => $btn,
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => true,
+                ]),
             ]);
         }
         \Log::info('Telegram response: ' . json_encode($response));
