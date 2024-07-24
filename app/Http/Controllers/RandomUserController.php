@@ -147,6 +147,15 @@ Endi Pastda paydo bo\'lgan 👇🏻
         $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
 Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>'Raqam saqlandi',
+            'reply_markup' => json_encode([
+                'keyboard' => [[['text'=>null,,'request_contact'=>false]]],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+            ]),
+        ]);
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
