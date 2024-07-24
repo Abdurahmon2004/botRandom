@@ -31,8 +31,8 @@
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h4>Barcha kodlar: {{ $codes->count() }}</h4>
-                                <h5>Foydalanilgan kodlar: {{ $codesActive->count() }}</h5>
+                                <h4>Barcha kodlar: {{ $codes }}</h4>
+                                <h5>Foydalanilgan kodlar: {{ $codesActive }}</h5>
 
                                 <p>Kodlar Haqida Ma'lumot</p>
                             </div>
@@ -48,7 +48,7 @@
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h4>Jami Foydalanuvchilar: {{ $users->count() }}</h4>
+                                <h4>Jami Foydalanuvchilar: {{ $users }}</h4>
 
                                 <h5>Kod kiritgan Foydalanuvchilar: {{ $codeUsers }}</h5>
 
@@ -66,9 +66,9 @@
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h4>Jami hududlar: {{ $regions->count() }}</h4>
+                                <h4>Jami hududlar: {{ $regions }}</h4>
 
-                                <h5>Aktiv hududlar: {{ $regionsActive->count() }}</h5>
+                                <h5>Aktiv hududlar: {{ $regionsActive }}</h5>
                                 <p>Hududlar</p>
                             </div>
                             <div class="icon">
@@ -83,9 +83,9 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h4>Jami maxsulotlar: {{ $products->count() }}</h4>
+                                <h4>Jami maxsulotlar: {{ $products }}</h4>
 
-                                <h5>Aktiv maxsulotlar: {{ $products->count() }}</h5>
+                                <h5>Aktiv maxsulotlar: {{ $products }}</h5>
                                 <p>Maxsulotlar</p>
                             </div>
                             <div class="icon">
