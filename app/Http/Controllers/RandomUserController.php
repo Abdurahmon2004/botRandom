@@ -61,7 +61,7 @@ class RandomUserController extends Controller
                         $this->Code($chatId, $text, $user, $messageId);
                         break;
                     case 'finish':
-                        $this->Code($chatId, $text, $user, $messageId);
+                        $this->finish($chatId, $user, $messageId);
                         break;
                 }
             }
@@ -237,6 +237,16 @@ class RandomUserController extends Controller
             $message = 'Bunday kod mavjud emas. Boshqa kod bolsa kiriting';
             $this->sendMessage($chatId, $message, $messageId);
         }
+    }
+    public function finish($chatId,$user,$messageId){
+        $count = CodeUser::where('user_id', $user->id)->get()->count();
+                $btnName = 'inline_keyboard';
+                $btn = [
+                    [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
+                    [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
+                ];
+                $message = 'Malumotlar muvaffaqiyatli saqlandi.Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: ' . $count;
+                $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
     public function sendMessage($chatId, $text, $messageId)
     {
