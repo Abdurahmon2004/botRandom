@@ -104,7 +104,7 @@ class RandomUserController extends Controller
     public function start($chatId, $messageId, $user)
     {
 
-        $text = 'Assalomu alaykum bizning palonchi botimizga hush kelibsiz! Ismingizni va Familiyangizni kiriting!';
+        $text = 'Assalomu alaykum bizning "Parjak" botimizga hush kelibsiz🎉! ❗️Ismingizni va Familiyangizni kiriting';
         $this->sendMessage($chatId, $text, $messageId);
     }
 
@@ -116,7 +116,7 @@ class RandomUserController extends Controller
                 'state' => 'await_phone',
             ]);
         }
-        $message = 'Ismingiz Muvaffaqiyatli saqlandi. Endi Pastda paydo bolgan "Raqam ulashish" tugmasini bosing!';
+        $message = 'Ismingiz Muvaffaqiyatli saqlandi✅ Endi Pastda paydo bolgan 👇🏻  "Raqam ulashish" tugmasini bosing!';
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
