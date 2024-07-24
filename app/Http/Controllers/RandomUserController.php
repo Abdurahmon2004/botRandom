@@ -120,7 +120,7 @@ class RandomUserController extends Controller
         $message = 'Ismingiz Muvaffaqiyatli saqlandi ✅
 Endi Pastda paydo bo\'lgan 👇🏻
 "Raqam ulashish" tugmasini bosing❗️';
-        $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
+        $btn = [[['text' => 'Telefon raqamni ulashish', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
@@ -147,6 +147,14 @@ Endi Pastda paydo bo\'lgan 👇🏻
         $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
 Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'reply_markup' => json_encode([
+                'keyboard' => [],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+            ]),
+        ]);
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
