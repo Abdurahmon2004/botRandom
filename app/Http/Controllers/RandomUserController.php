@@ -60,6 +60,9 @@ class RandomUserController extends Controller
                     case 'await_code':
                         $this->Code($chatId, $text, $user, $messageId);
                         break;
+                    case 'finish':
+                        $this->Code($chatId, $text, $user, $messageId);
+                        break;
                 }
             }
 
