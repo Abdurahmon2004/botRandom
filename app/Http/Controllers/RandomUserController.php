@@ -9,6 +9,7 @@ use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
 use App\Models\UserChat;
+use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class RandomUserController extends Controller
@@ -147,6 +148,9 @@ Endi Pastda paydo bo\'lgan 👇🏻
         $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
 Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
+        $btnNewName = 'keyboard';
+        $btnNew = [[['text' => 'Start', 'callback_data' => '/start']]];
+        $this->sendMessageBtn($chatId, $message, $btnNew, $btnNewName, null);
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
@@ -296,7 +300,6 @@ Siz kiritgan kodlar soni: ' . $count;
                 'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
-                    'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
                     'resize_keyboard' => true,
                     'one_time_keyboard' => true,
                 ]),
@@ -308,6 +311,7 @@ Siz kiritgan kodlar soni: ' . $count;
                 'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
+                    'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
                     'resize_keyboard' => true,
                     'one_time_keyboard' => true,
                 ]),
