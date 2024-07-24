@@ -105,7 +105,7 @@ class RandomUserController extends Controller
     {
 
         $text = 'Assalomu alaykum bizning "Parjak" botimizga hush kelibsiz🎉
-        ❗️Ismingizni va Familiyangizni kiriting';
+❗️Ismingizni va Familiyangizni kiriting';
         $this->sendMessage($chatId, $text, $messageId);
     }
 
@@ -118,7 +118,7 @@ class RandomUserController extends Controller
             ]);
         }
         $message = `Ismingiz Muvaffaqiyatli saqlandi ✅
-        Endi Pastda paydo bo'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️`;
+Endi Pastda paydo bo'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️`;
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
@@ -144,7 +144,7 @@ class RandomUserController extends Controller
             ];
         }
         $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
-        Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
+Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
