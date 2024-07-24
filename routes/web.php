@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -17,9 +18,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware('admin')->group(function(){
-    Route::get('/', function () {
-        return view('dashboard.dashboard');
-    })->name('admin');
+    Route::get('/', [DashboardController::class,'index'])->name('admin');
 
     Route::get('/com', function () {
        Artisan::call('optimize');
