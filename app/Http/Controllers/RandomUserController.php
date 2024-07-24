@@ -145,12 +145,17 @@ Endi Pastda paydo bo\'lgan 👇🏻
                 ],
             ];
         }
-        $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
-Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
+        $message = "Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
-        $btnNewName = 'keyboard';
-        $btnNew = [[['text' => 'Start', 'callback_data' => '/start']]];
-        $this->sendMessageBtn($chatId, $message, $btnNew, $btnNewName, null);
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
+            'reply_markup' => json_encode([
+                'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+            ]),
+        ]);
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
@@ -311,7 +316,6 @@ Siz kiritgan kodlar soni: ' . $count;
                 'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
-                    'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
                     'resize_keyboard' => true,
                     'one_time_keyboard' => true,
                 ]),
