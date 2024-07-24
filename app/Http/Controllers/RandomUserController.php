@@ -117,8 +117,8 @@ class RandomUserController extends Controller
                 'state' => 'await_phone',
             ]);
         }
-        $message = `Ismingiz Muvaffaqiyatli saqlandi ✅
-Endi Pastda paydo bo'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️`;
+        $message = 'Ismingiz Muvaffaqiyatli saqlandi ✅
+Endi Pastda paydo bo\'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️';
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
@@ -265,11 +265,13 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
+                'parse_mode' => 'html'
             ]);
         } catch (\Exception $e) {
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
+                'parse_mode' => 'html'
             ]);
         }
         \Log::info('Telegram response: ' . json_encode($response));
@@ -282,6 +284,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
+                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
@@ -292,6 +295,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
+                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
