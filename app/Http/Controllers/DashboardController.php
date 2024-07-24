@@ -35,7 +35,8 @@ class DashboardController extends Controller
         $codes = Code::all()->count()??0;
         $regions = Region::all()->count()??0;
         $regionsActive = Region::where('status',1)->get()->count()??0;
-        $products = Product::where('status',1)->get()->count()??0;
-        return view('dashboard.dashboard',compact('users','codes','codesActive','regions','products','codeUsers','regionsActive'));
+        $products = Product::all()->count()??0;
+        $productsActive = Product::where('status',1)->count()??0;
+        return view('dashboard.dashboard',compact('users','codes','codesActive','regions','products','productsActive','codeUsers','regionsActive'));
     }
 }

@@ -85,7 +85,7 @@
                             <div class="inner">
                                 <h4>Jami maxsulotlar: {{ $products }}</h4>
 
-                                <h5>Aktiv maxsulotlar: {{ $products }}</h5>
+                                <h5>Aktiv maxsulotlar: {{ $productsActive }}</h5>
                                 <p>Maxsulotlar</p>
                             </div>
                             <div class="icon">
