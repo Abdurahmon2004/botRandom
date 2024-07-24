@@ -23,7 +23,7 @@ Route::middleware('admin')->group(function(){
 
     Route::get('/com', function () {
        Artisan::call('optimize');
-       Artisan::call('migrate:fresh');
+       Artisan::call('migrate');
        dd('hello');
     });
     Route::resource('regions', RegionController::class);
