@@ -147,14 +147,12 @@ Endi Pastda paydo bo\'lgan 👇🏻
         }
         $message = "Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
+        $remove = Keyboard::make()->setRemoveKeyboard(true);
+
         Telegram::sendMessage([
             'chat_id'=>$chatId,
             'text'=>'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
-            'reply_markup' => json_encode([
-                'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
-                'resize_keyboard' => true,
-                'one_time_keyboard' => true,
-            ]),
+            'reply_markup' => $remove
         ]);
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
