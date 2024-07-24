@@ -151,7 +151,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
             'chat_id'=>$chatId,
             'text'=>'Raqam saqlandi',
             'reply_markup' => json_encode([
-                'keyboard' => [[['text'=>null,,'request_contact'=>false]]],
+                'keyboard' => [[['text'=>null,'request_contact'=>false]]],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
             ]),
