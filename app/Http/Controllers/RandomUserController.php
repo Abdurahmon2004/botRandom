@@ -117,7 +117,8 @@ class RandomUserController extends Controller
                 'state' => 'await_phone',
             ]);
         }
-        $message = `Ismingiz Muvaffaqiyatli saqlandi ✅ Endi Pastda paydo bo'lgan 👇🏻  "Raqam ulashish" tugmasini bosing!`;
+        $message = `Ismingiz Muvaffaqiyatli saqlandi ✅
+        Endi Pastda paydo bo'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️`;
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
@@ -142,7 +143,8 @@ class RandomUserController extends Controller
                 ],
             ];
         }
-        $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang!";
+        $message = "Telefon raqamingiz muvaffaqiyatli saqlandi ✅
+        Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
