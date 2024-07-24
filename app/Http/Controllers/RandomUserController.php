@@ -161,7 +161,9 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                 ]);
             }
 
-            $message = "Viloyatingiz muvaffaqiyatli saqlandi. Pastdagi tugmalar orqali! Qaysi maxsulotni sotib olganizni tanlang. ";
+            $message = "Viloyatingiz muvaffaqiyatli saqlandi ✅
+Pastdagi tugmalar orqali👇🏻
+Qaysi maxsulotni sotib olganizni tanlang🫵";
             $products = Product::where('status', 1)->get();
             $btn = [];
             foreach ($products as $product) {
@@ -192,7 +194,8 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                     'state' => 'await_code',
                 ]);
             }
-            $message = "Hammasi yaxshi o'tdi endi.Himoya qatlami ostidagi kodni kiriting";
+            $message = "Hammasi yaxshi o'tdi endi🥳
+Himoya qatlami ostidagi 🎫 kodni kiriting";
             $this->sendMessage($chatId, $message, $messageId);
         } else {
             $message = 'Bunday maxsulot topilmadi!';
@@ -203,7 +206,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
     }
     public function Code($chatId, $text, $user, $messageId)
     {
-        $message = "Himoya qatlami ostidagi kodni kiriting";
+        $message = "Himoya qatlami ostidagi 🎫 kodni kiriting";
         $user->update([
             'state' => 'await_code',
         ]);
@@ -231,14 +234,17 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                     [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
                     [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
                 ];
-                $message = 'Malumotlar muvaffaqiyatli saqlandi.Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: ' . $count;
+                $message = 'Malumotlar muvaffaqiyatli saqlandi🥳✅🥳
+Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
+Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
+Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
             } else if ($code->status == 0) {
                 $message = 'Bu kod oldin foydanalingan. Boshqa kod bolsa kiriting';
                 $this->sendMessage($chatId, $message, $messageId);
             }
         } else {
-            $message = 'Bunday kod mavjud emas. Boshqa kod bolsa kiriting';
+            $message = 'Bunday kod mavjud emas ❌ Boshqa kod bolsa kiriting ✅';
             $this->sendMessage($chatId, $message, $messageId);
         }
     }
@@ -249,7 +255,9 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                     [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
                     [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
                 ];
-                $message = 'Yutuqlar har oyning 30-sanasida aniqlanadi. Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring. Siz kiritgan kodlar soni: ' . $count;
+                $message = 'Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
+Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
+Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
     public function sendMessage($chatId, $text, $messageId)
@@ -285,6 +293,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
+                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
@@ -295,6 +304,7 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
+                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
