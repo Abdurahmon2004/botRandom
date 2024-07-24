@@ -296,6 +296,7 @@ Siz kiritgan kodlar soni: ' . $count;
                 'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
+                    'keyboard'=>[[['text'=>'Start','callback_data'=>'/start']]],
                     'resize_keyboard' => true,
                     'one_time_keyboard' => true,
                 ]),
