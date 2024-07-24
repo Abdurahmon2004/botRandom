@@ -285,7 +285,6 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
                 'chat_id' => $chatId,
                 'message_id' => $messageId,
                 'text' => $text,
-                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
@@ -296,7 +295,6 @@ Pastdagi 👇🏻 ro'yhatdan Viloyatingizni tanlang❗️";
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
-                'parse_mode' => 'html',
                 'reply_markup' => json_encode([
                     $btnName => $btn,
                     'resize_keyboard' => true,
