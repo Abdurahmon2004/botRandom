@@ -118,7 +118,8 @@ class RandomUserController extends Controller
             ]);
         }
         $message = 'Ismingiz Muvaffaqiyatli saqlandi ✅
-Endi Pastda paydo bo\'lgan 👇🏻 "Raqam ulashish" tugmasini bosing❗️';
+Endi Pastda paydo bo\'lgan 👇🏻
+"Raqam ulashish" tugmasini bosing❗️';
         $btn = [[['text' => 'Telefon raqamingizni kiriting', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
