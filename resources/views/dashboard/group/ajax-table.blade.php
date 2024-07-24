@@ -2,7 +2,8 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Nomi</th>
+            <th>Maxsulot nomi</th>
             <th>Kodlar soni</th>
             <th>Status</th>
             <th>Actions</th>
@@ -13,6 +14,7 @@
             <tr>
                 <td>{{ $group->id }}</td>
                 <td>{{ $group->name }}</td>
+                <td>{{ $group->product->name }}</td>
                 <td>{{ $group->codes->count() }} ta</td>
                 <td>{{ $group->status == 0 ? 'Nofaol': 'Faol' }}</td>
                 <td>

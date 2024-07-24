@@ -12,8 +12,8 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active">Winner Groups</li>
+                            <li class="breadcrumb-item"><a href="/">Asosiy sahifa</a></li>
+                            <li class="breadcrumb-item active"><a href="/winner-groups">Random o'yini</a></li>
                         </ol>
                     </div>
                 </div>
@@ -28,12 +28,12 @@
                 <div class="container-fluid" style="overflow: auto">
                     <div class="card-header bg-white d-flex justify-content-end">
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">
-                            <span class="fas fa-plus-circle"></span> Add New Winner Group
+                            <span class="fas fa-plus-circle"></span> Random o'yinchi aniqlash
                         </button>
                     </div>
                     <div class="card">
                         <div class="card-body" id="ajax-request">
-                            @include('dashboard.winners.ajax-table', ['winnerGroups' => $winnerGroups])
+                            @include('dashboard.winners.user.ajax-table', ['users' => $users])
                         </div>
                     </div>
                 </div>
@@ -43,12 +43,11 @@
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    @include('dashboard.winners.editModal')
-    @include('dashboard.winners.addModal')
+    @include('dashboard.winners.user.addModal')
     <script>
-        function loadWinnerGroups() {
+        function loadWinner() {
             $.ajax({
-                url: '{{ route('winner-groups.index') }}',
+                url: '/winnerUsers/{{$id}}',
                 type: 'GET',
                 dataType: 'html',
                 success: function(response) {

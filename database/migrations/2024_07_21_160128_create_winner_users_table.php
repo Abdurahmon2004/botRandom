@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('winner_users', function (Blueprint $table) {
             $table->id();
-            $table->integer('winner_group_id');
-            $table->integer('user_id');
-            $table->integer('code_id');
+            $table->integer('winner_group_id')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('code_id')->nullable();
             $table->timestamps();
         });
     }

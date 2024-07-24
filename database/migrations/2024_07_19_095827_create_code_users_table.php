@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('code_users', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->nullable();
-            $table->integer('code_id')->default(1);
+            $table->integer('code_id')->nullable();
             $table->integer('region_id')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();

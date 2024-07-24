@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RandomUserController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WinnerController;
 use App\Models\UserChat;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -36,5 +37,10 @@ Route::middleware('admin')->group(function(){
     Route::get('/codes/export/{group}', [GroupController::class, 'export'])->name('codes.export');
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::resource('/winner-groups', WinnerController::class);
+
+    Route::get('/winnerUsers/{id}', [WinnerController::class, 'userIndex'])->name('winnerUsers.index');
+    Route::post('/winner/store/{id}', [WinnerController::class, 'saveWinners'])->name('winner.store');
+
 });
 require __DIR__.'/auth.php';

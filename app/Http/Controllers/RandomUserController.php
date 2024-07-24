@@ -29,7 +29,12 @@ class RandomUserController extends Controller
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
-                $user = TgUser::where('')
+                $user = TgUser::where('state','await_phone')->first();
+                if($user){
+                    $this->savePhone($chatId,$contact,$messageId);
+                }else{
+                    $this->handleMessage($chatId,'/start',$messageId);
+                }
             }
         }
     }

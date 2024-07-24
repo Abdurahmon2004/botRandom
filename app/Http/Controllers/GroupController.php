@@ -15,7 +15,7 @@ class GroupController extends Controller
 {
     public function index(Request $request)
     {
-        $groups = Group::all();
+        $groups = Group::orderBy('id','desc')->paginate(15);
         $products = Product::where('status', 1)->get();
         if ($request->ajax()) {
             return view('dashboard.group.ajax-table', compact('groups'));

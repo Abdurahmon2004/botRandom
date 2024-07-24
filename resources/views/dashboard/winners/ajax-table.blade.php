@@ -4,15 +4,17 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
+            <th>Nomi</th>
+            <th>G'oliblar soni</th>
+            <th>Amallar</th>
         </tr>
     </thead>
     <tbody>
         @foreach($winnerGroups as $winnerGroup)
             <tr>
                 <td>{{ $winnerGroup->id }}</td>
-                <td>{{ $winnerGroup->name }}</td>
+                <td><a href="{{route('winnerUsers.index',$winnerGroup->id)}}">{{ $winnerGroup->name }}</a></td>
+                <td>{{ $winnerGroup->users->count() }}</td>
                 <td>
                     <button type="button"
                     class="btn btn-primary btn-sm editWinnerGroup" data-bs-toggle="modal"

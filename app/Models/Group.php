@@ -12,4 +12,7 @@ class Group extends Model
     public function codes(){
         return $this->hasMany(Code::class);
     }
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
 }
