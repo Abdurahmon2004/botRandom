@@ -104,7 +104,7 @@ class RandomUserController extends Controller
     public function start($chatId, $messageId, $user)
     {
 
-        $text = 'Assalomu alaykum bizning "Parjak" botimizga hush kelibsiz🎉
+        $text = 'Assalomu alaykum "Parjak" botimizga hush kelibsiz🎉
 ❗️Ismingizni va Familiyangizni kiriting';
         $this->sendMessage($chatId, $text, $messageId);
     }
