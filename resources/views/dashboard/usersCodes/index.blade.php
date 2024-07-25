@@ -59,7 +59,7 @@
            console.log(id);
            $.ajax({
                url: '/codeDelete/'+id,
-               type: 'POST',
+               type: 'get',
                dataType: 'html',
                success: function(response) {
                    $('#ajax-request').html(response);

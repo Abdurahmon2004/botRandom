@@ -39,7 +39,7 @@ Route::middleware('admin')->group(function(){
 
     Route::get('/UserCodes', [UserController::class, 'codeUser'])->name('usersCodes');
 
-    Route::post('/codeDelete/{id}', [UserController::class, 'deleteCode']);
+    Route::get('/codeDelete/{id}', [UserController::class, 'deleteCode']);
 
     Route::resource('/winner-groups', WinnerController::class);
 
