@@ -25,21 +25,5 @@
 <ul class="pagination pagination-rounded justify-content-end mb-2">
     {{ $users->links() }}
 </ul>
-<script>
-     $(document).on('click', '.DeleteBtn', function() {
-        var id = $(this).data('id');
-        console.log(id);
-        $.ajax({
-            url: '/codeDelete'+id,
-            type: 'GET',
-            dataType: 'html',
-            success: function(response) {
-                $('#ajax-request').html(response);
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    });
-</script>
+
 
