@@ -15,7 +15,7 @@
                 <td>{{ $user->user->name }}</td>
                 <td>{{ $user->user->phone }}</td>
                 <td>{{ $user->created_at }}</td>
-                <td><button class="btn btn-danger" id="DeleteBtn" type="button"
+                <td><button class="btn btn-danger DeleteBtn" type="button"
                        data-id="{{ $user->id }}">O'chirish</button>
                 </td>
             </tr>
@@ -26,7 +26,7 @@
     {{ $users->links() }}
 </ul>
 <script>
-     $(document).on('click', '#DeleteBtn', function() {
+     $(document).on('click', '.DeleteBtn', function() {
         var id = $(this).data('id');
         console.log(id);
         $.ajax({
@@ -40,5 +40,6 @@
                 console.log(error);
             }
         });
-    })
+    });
 </script>
+
