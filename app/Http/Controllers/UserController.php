@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Code;
 use App\Models\CodeUser;
 use App\Models\TgUser;
 use Illuminate\Http\Request;
@@ -25,7 +26,11 @@ class UserController extends Controller
         return view('dashboard.usersCodes.index', compact('users'));
     }
     public function deleteCode($id){
-        $code = CodeUser::find($id)->delete();
+        $code = CodeUser::find($id);
+        Code::where('id',$code->code_id)->first()->update([
+            'status'=>1
+        ]);
+        $code->delete();
         return response()->json(['success','deleted']);
     }
 }
