@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProductController;
@@ -47,6 +48,9 @@ Route::middleware('admin')->group(function(){
 
     Route::get('/winnerUsers/{id}', [WinnerController::class, 'userIndex'])->name('winnerUsers.index');
     Route::post('/winner/store/{id}', [WinnerController::class, 'saveWinners'])->name('winner.store');
+
+
+    Route::resource('channels', ChannelController::class)->except(['create', 'edit', 'show']);
 
 });
 require __DIR__.'/auth.php';

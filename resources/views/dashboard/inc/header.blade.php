@@ -131,6 +131,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('channels.index') }}" class="nav-link {{Request::is('channels*') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Social Media
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
