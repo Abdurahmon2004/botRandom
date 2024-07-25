@@ -12,9 +12,8 @@
         @foreach($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->phone }}</td>
-                <td>{{ $user->region->name }}</td>
+                <td>{{ $user->user->name }}</td>
+                <td>{{ $user->user->phone }}</td>
                 <td>{{ $user->created_at }}</td>
             </tr>
         @endforeach
