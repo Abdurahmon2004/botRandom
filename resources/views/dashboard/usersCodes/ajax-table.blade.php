@@ -9,13 +9,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($users as $user)
+        @foreach ($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->user->name }}</td>
                 <td>{{ $user->user->phone }}</td>
                 <td>{{ $user->created_at }}</td>
-                <td><button class="btn btn-danger" type="button" onclick="confirm('Rostdan ham o\'chirasizmi?')" data-id="{{$user->id}}">O'chirish</button></td>
+                <td><button class="btn btn-danger" id="DeleteBtn" type="button"
+                        onclick="confirm('Rostdan ham o\'chirasizmi?')" data-id="{{ $user->id }}">O'chirish</button>
+                </td>
             </tr>
         @endforeach
     </tbody>
@@ -23,3 +25,19 @@
 <ul class="pagination pagination-rounded justify-content-end mb-2">
     {{ $users->links() }}
 </ul>
+<script>
+    $('#DeleteBtn').click(function() {
+        let id = $(this).data('id');
+        $.ajax({
+            url: '/codeDelete'+id,
+            type: 'GET',
+            dataType: 'html',
+            success: function(response) {
+                $('#ajax-request').html(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    })
+</script>
