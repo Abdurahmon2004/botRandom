@@ -15,7 +15,7 @@
                 <td>{{ $user->user->name }}</td>
                 <td>{{ $user->user->phone }}</td>
                 <td>{{ $user->created_at }}</td>
-                <td><button class="btn btn-danger" type="button" data-id="{{$user->id}}">O'chirish</button></td>
+                <td><button class="btn btn-danger" type="button" onclick="confirm('Rostdan ham o\'chirasizmi?')" data-id="{{$user->id}}">O'chirish</button></td>
             </tr>
         @endforeach
     </tbody>
