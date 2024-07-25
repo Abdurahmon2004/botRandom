@@ -238,8 +238,9 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
                 ]);
                 $count = CodeUser::where('user_id', $user->id)->get()->count();
                 $btnName = 'inline_keyboard';
+                $chanel = Channel::first();
                 $btn = [
-                    [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
+                    [['text' => 'Kanalni korish', 'url' => $chanel->channel]],
                     [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
                 ];
                 $message = 'Malumotlar muvaffaqiyatli saqlandi🥳✅🥳
