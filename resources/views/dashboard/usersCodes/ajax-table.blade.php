@@ -26,8 +26,9 @@
     {{ $users->links() }}
 </ul>
 <script>
-    $('#DeleteBtn').click(function() {
+     $(document).on('click', '#DeleteBtn', function() {
         let id = $(this).data('id');
+        console.log(id);
         $.ajax({
             url: '/codeDelete'+id,
             type: 'GET',
