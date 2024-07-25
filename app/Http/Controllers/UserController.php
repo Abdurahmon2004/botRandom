@@ -24,4 +24,8 @@ class UserController extends Controller
         }
         return view('dashboard.usersCodes.index', compact('users'));
     }
+    public function deleteCode($id){
+        $code = CodeUser::find($id)->delete();
+        return response()->json(['success','deleted']);
+    }
 }
