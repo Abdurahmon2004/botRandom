@@ -252,7 +252,7 @@ Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
 Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
             } else if ($code->status == 0) {
-                $message = 'Bu kod oldin foydanalingan. Boshqa kod bolsa kiriting';
+                $message = 'Bu kod oldin foydanalingan. Boshqa kod bo\'lsa kiriting';
                 $this->sendMessage($chatId, $message, $messageId);
             }
         } else {
