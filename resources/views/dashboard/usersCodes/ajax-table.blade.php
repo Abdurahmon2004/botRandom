@@ -27,7 +27,7 @@
 </ul>
 <script>
      $(document).on('click', '#DeleteBtn', function() {
-        let id = $(this).data('id');
+        var id = $(this).data('id');
         console.log(id);
         $.ajax({
             url: '/codeDelete'+id,
