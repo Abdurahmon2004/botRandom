@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Channel;
 use App\Models\Code;
 use App\Models\CodeUser;
 use App\Models\Product;
@@ -262,8 +263,9 @@ Iltimos qaytadan tering! ✅';
     public function finish($chatId,$user,$messageId){
         $count = CodeUser::where('user_id', $user->id)->get()->count();
                 $btnName = 'inline_keyboard';
+                $chanel = Channel::first();
                 $btn = [
-                    [['text' => 'Kanalni korish', 'url' => 'https://t.me/abdurohman_karimjonov']],
+                    [['text' => 'Kanalni korish', 'url' => $chanel->channel]],
                     [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
                 ];
                 $message = 'Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
