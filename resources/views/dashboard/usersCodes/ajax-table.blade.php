@@ -4,6 +4,7 @@
             <th>ID</th>
             <th>F.I.O</th>
             <th>Telefon Raqami</th>
+            <th>Kodi</th>
             <th>Qo'shilgan sanasi</th>
             <th>Amallar</th>
         </tr>
@@ -14,6 +15,7 @@
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->user->name }}</td>
                 <td>{{ $user->user->phone }}</td>
+                <td>{{ $user->code->code }}</td>
                 <td>{{ $user->created_at }}</td>
                 <td><button class="btn btn-danger DeleteBtn" type="button"
                     onclick="confirm('Rostdan ham o\'chirib tashlaysizmi?')"   data-id="{{ $user->id }}">O'chirish</button>
