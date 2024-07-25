@@ -58,7 +58,7 @@
            var id = $(this).data('id');
            console.log(id);
            $.ajax({
-               url: '/codeDelete'+id,
+               url: '/codeDelete/'+id,
                type: 'GET',
                dataType: 'html',
                success: function(response) {
