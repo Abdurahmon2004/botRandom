@@ -29,7 +29,7 @@
     $('#addCodes').submit(function(e) {
         e.preventDefault();
         var codeCount = $('#count').val();
-        if (codeCount > 10001) {
+        if (codeCount > 25000) {
             $('#count').addClass('is-invalid');
             $('#codeId').removeAttr('style');
             return;

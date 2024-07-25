@@ -46,7 +46,7 @@
 
         var codeCount = $('#code_count').val();
 
-        if (codeCount > 10001) {
+        if (codeCount > 25000) {
             $('#code_count').addClass('is-invalid');
             $('#countId').removeAttr('style');
             return;
