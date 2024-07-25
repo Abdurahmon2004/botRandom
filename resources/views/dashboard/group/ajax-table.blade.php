@@ -13,7 +13,7 @@
         @foreach($groups as $group)
             <tr>
                 <td>{{ $group->id }}</td>
-                <td>{{ $group->name }}</td>
+                <td><a href="{{route('allCodes',$group->id)}}">{{ $group->name }}</a></td>
                 <td>{{ $group->product->name }}</td>
                 <td>{{ $group->codes->count() }} ta</td>
                 <td>{{ $group->status == 0 ? 'Nofaol': 'Faol' }}</td>

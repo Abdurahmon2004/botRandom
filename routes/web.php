@@ -31,6 +31,8 @@ Route::middleware('admin')->group(function(){
 
     Route::resource('codes', GroupController::class);
 
+    Route::get('/allCodes/{id}', [GroupController::class, 'allCodes'])->name('allCodes');
+
     Route::post('/codes-group/{id}',[GroupController::class, 'codesAdd']);
 
     Route::get('/codes/export/{group}', [GroupController::class, 'export'])->name('codes.export');

@@ -126,4 +126,9 @@ class GroupController extends Controller
         $name = Group::find($groupId)->name;
         return Excel::download(new CodesExport($groupId), $name.'.xlsx');
     }
+
+    public function allCodes($id){
+        $codes = Code::where('group_id',$id)->paginate(13);
+        return view('dashboard.group.codeIndex', compact('codes'));
+    }
 }
