@@ -41,7 +41,7 @@
     <script>
         function loadTgUsers() {
             $.ajax({
-                url: '{{ route('users') }}',
+                url: '{{ route('usersCodes') }}',
                 type: 'GET',
                 dataType: 'html',
                 success: function(response) {
@@ -62,7 +62,7 @@
                type: 'get',
                dataType: 'html',
                success: function(response) {
-                   $('#ajax-request').html(response);
+                 loadTgUsers();
                },
                error: function(error) {
                    console.log(error);
