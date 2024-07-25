@@ -4,8 +4,8 @@
             <th>ID</th>
             <th>F.I.O</th>
             <th>Telefon Raqami</th>
-            <th>Hududi</th>
             <th>Qo'shilgan sanasi</th>
+            <th>Amallar</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +15,7 @@
                 <td>{{ $user->user->name }}</td>
                 <td>{{ $user->user->phone }}</td>
                 <td>{{ $user->created_at }}</td>
+                <td><button class="btn btn-danger" type="button" data-id="{{$user->id}}">O'chirish</button></td>
             </tr>
         @endforeach
     </tbody>
