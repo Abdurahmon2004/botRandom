@@ -36,6 +36,9 @@ Route::middleware('admin')->group(function(){
     Route::get('/codes/export/{group}', [GroupController::class, 'export'])->name('codes.export');
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
+
+    Route::get('/UserCodes', [UserController::class, 'codeUser'])->name('usersCodes');
+
     Route::resource('/winner-groups', WinnerController::class);
 
     Route::get('/winnerUsers/{id}', [WinnerController::class, 'userIndex'])->name('winnerUsers.index');

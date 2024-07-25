@@ -122,7 +122,14 @@
                                 </p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a href="{{ route('usersCodes') }}" class="nav-link {{Request::is('UserCodes*') ? 'active' : ''}}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Kod kiritganlar
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
