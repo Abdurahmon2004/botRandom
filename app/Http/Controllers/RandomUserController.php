@@ -254,7 +254,8 @@ Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessage($chatId, $message, $messageId);
             }
         } else {
-            $message = 'Bunday kod mavjud emas ❌ Boshqa kod bolsa kiriting ✅';
+            $message = 'Bunday kod mavjud emas ❌
+Iltimos qaytadan tering! ✅';
             $this->sendMessage($chatId, $message, $messageId);
         }
     }
