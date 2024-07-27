@@ -14,12 +14,12 @@
                     <div class="mb-3">
                         <label for="Holati">Kodlar soni</label><br>
                         <input type="number" name="code_count" id="count" class="form-control">
-                        <p class="text-danger" id="codeId" style="display: none">10 mingtadan ko'p kiritish mumkin emas</p>
+                        <p class="text-danger" id="codeId" style="display: none">25 mingtadan ko'p kiritish mumkin emas</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
-                    <button type="submit" class="btn btn-primary" id="codesAdd">Saqlash</button>
+                    <button type="submit" id="waitBtn" class="btn btn-primary" id="codesAdd">Saqlash</button>
                 </div>
             </form>
         </div>
@@ -44,9 +44,12 @@
             type: 'POST',
             data: formData,
             beforeSend: function() {
+                $('#waitBtn').attr('style','display:none')
                 $('#await').removeAttr('style');
             },
             success: function(response) {
+                $('#waitBtn').attr('style','display:block')
+                $('#await').removeAttr('style','display:none');
                 $('#addCodesModal').modal('hide');
                 $('#addCodes')[0].reset();
                 loadGroup();
