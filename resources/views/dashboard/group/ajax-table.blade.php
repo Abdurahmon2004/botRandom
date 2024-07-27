@@ -36,3 +36,7 @@
         @endforeach
     </tbody>
 </table>
+<ul class="pagination pagination-rounded justify-content-end mb-2">
+    {{ $groups->links() }}
+</ul>
+
