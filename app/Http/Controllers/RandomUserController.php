@@ -245,7 +245,7 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
                 ];
                 $message = 'Malumotlar muvaffaqiyatli saqlandi🥳✅🥳
 
-Yutuqlar 🎁 har oyning 30-sanasida aniqlanadi
+Yutuqlar 🎁 sanasi telegram kanalimizda e\'lon qilinadi.
 
 Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
 
