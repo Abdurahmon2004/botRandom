@@ -247,7 +247,7 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
 
 Yutuqlar 🎁 sanasi telegram kanalimizda e\'lon qilinadi.
 
-Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀
+Tanlovni kuzatib borish uchun ushbu kanalni kuzatib boring👀👇🏻
 
 Siz kiritgan kodlar soni: ' . $count;
                 $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
