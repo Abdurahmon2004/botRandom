@@ -9,7 +9,7 @@ class RegionController extends Controller
 {
     public function index(Request $request)
     {
-        $regions = Region::paginate(10);
+        $regions = Region::orderBy('id','desc')->paginate(10);
         if($request->ajax()){
             return view('dashboard.regions.ajax-table', compact('regions'))->render();
 
