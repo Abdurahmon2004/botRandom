@@ -91,7 +91,14 @@ class WinnerController extends Controller
 
             $winners = $winners->merge($additionalUsers);
         }
-
+        foreach ($winners as $winner){
+            WinnerUser::create([
+                'user_id' => $winner->user_id,
+                'code_id' => $winner->code_id,
+                'winner_group_id' => $id,
+            ]);
+        }
+        CodeUser::whereIn('region_id', $winn->region_ids)->whereIn('product_id', $winn->product_ids)->update(['status' => 0]);
         return response()->json(['success' => 'Foydalanuvchilar topildi', 'users' => $winners], 200);
     }
 
