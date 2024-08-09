@@ -92,6 +92,10 @@ class WinnerController extends Controller
 
             $winners = $winners->merge($additionalUsers);
         }
+        if(count($winners) == 0){
+            return response()->json(['errorr' => 'Foydalanuvchilar topilmadi'], 404);
+        }
+
 
         // Transaktsiya ichida saqlash
         \DB::transaction(function () use ($winners, $id, $winn) {
