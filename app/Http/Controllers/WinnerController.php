@@ -71,13 +71,12 @@ class WinnerController extends Controller
                 ->unique('user_id')
                 ->take($perRegionCount);
 
-
-
             $winners = $winners->merge($regionUsers);
         }
 
         // Agar umumiy son yetarli bo'lmasa, qolgan foydalanuvchilarni qo'shish
         if ($winners->count() < $count) {
+            $remainingCount = $count - $winners->count();
             $additionalUsers = CodeUser::whereIn('region_id', $winn->region_ids)
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
@@ -85,22 +84,25 @@ class WinnerController extends Controller
                 ->inRandomOrder()
                 ->get()
                 ->unique('user_id')
-                ->take($perRegionCount);
+                ->take($remainingCount);
 
             $winners = $winners->merge($additionalUsers);
         }
-        if ($winners->isEmpty()) {
-            return response()->json(['error' => "Region ID $region uchun foydalanuvchi topilmadi"], 404);
-        }
-        foreach ($winners as $winner){
-            WinnerUser::create([
-                'user_id' => $winner->user_id,
-                'code_id' => $winner->code_id,
-                'winner_group_id' => $id,
-            ]);
-        }
-        CodeUser::whereIn('region_id', $winn->region_ids)->whereIn('product_id', $winn->product_ids)->update(['status' => 0]);
+
+        // Transaktsiya ichida saqlash
+        \DB::transaction(function () use ($winners, $id, $winn) {
+            foreach ($winners as $winner) {
+                WinnerUser::create([
+                    'user_id' => $winner->user_id,
+                    'code_id' => $winner->code_id,
+                    'winner_group_id' => $id,
+                ]);
+            }
+            CodeUser::whereIn('region_id', $winn->region_ids)->whereIn('product_id', $winn->product_ids)->update(['status' => 0]);
+        });
+
         return response()->json(['success' => 'Foydalanuvchilar topildi', 'users' => $winners], 200);
     }
+
 
 }
