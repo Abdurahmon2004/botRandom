@@ -61,8 +61,10 @@ class WinnerController extends Controller
         $winners = collect();
 
         foreach ($winn->region_ids as $region) {
+            // Oldindan tanlangan foydalanuvchilarni istisno qilish
             $regionUsers = CodeUser::where('region_id', $region)
                 ->whereIn('product_id', $winn->product_ids)
+                ->whereNotIn('user_id', $winners->pluck('user_id'))
                 ->select('user_id', 'code_id', 'region_id')
                 ->distinct()
                 ->inRandomOrder()
@@ -80,6 +82,7 @@ class WinnerController extends Controller
         if ($winners->count() < $count) {
             $additionalUsers = CodeUser::whereIn('region_id', $winn->region_ids)
                 ->whereIn('product_id', $winn->product_ids)
+                ->whereNotIn('user_id', $winners->pluck('user_id'))
                 ->select('user_id', 'code_id', 'region_id')
                 ->distinct()
                 ->inRandomOrder()
