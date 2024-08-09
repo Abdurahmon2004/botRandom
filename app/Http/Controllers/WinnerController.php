@@ -66,7 +66,7 @@ class WinnerController extends Controller
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id')
-                ->distinct()
+                ->groupBy('user_id')  // Bitta user_id bir marta tanlanishi uchun
                 ->inRandomOrder()
                 ->limit($perRegionCount)
                 ->get();
@@ -84,7 +84,7 @@ class WinnerController extends Controller
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id')
-                ->distinct()
+                ->groupBy('user_id')  // Bitta user_id bir marta tanlanishi uchun
                 ->inRandomOrder()
                 ->limit($count - $winners->count())
                 ->get();
