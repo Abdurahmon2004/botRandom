@@ -227,10 +227,9 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
         $code = Code::where('code', $text)->first();
         if ($code) {
             if ($code->status == 1) {
-                $groupId = $code->group->id;
-                $prductId = Group::find($groupId);
+                $groupId = $code->group->product_id;
                  Log::info($groupId);
-                if(!$prductId && $groupId){
+                if(!$groupId){
                     $message = 'Nimadur xato ketdi.
 Iltimos Himoya qatlami ostidagi kodni boshqatdan kiriting!';
                     return $this->sendMessage($chatId, $message, $messageId);
@@ -239,6 +238,7 @@ Iltimos Himoya qatlami ostidagi kodni boshqatdan kiriting!';
                     'user_id' => $user->id,
                     'code_id' => $code->id,
                     'region_id' => $user->region_id,
+                    'product_id' => $groupId,
                 ]);
                 $code->update([
                     'status' => 0,
