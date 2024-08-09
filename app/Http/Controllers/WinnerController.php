@@ -66,10 +66,10 @@ class WinnerController extends Controller
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id')
-                ->groupBy('user_id')  // Bitta user_id bir marta tanlanishi uchun
                 ->inRandomOrder()
-                ->limit($perRegionCount)
-                ->get();
+                ->get()
+                ->unique('user_id')
+                ->take($perRegionCount);
 
             if ($regionUsers->isEmpty()) {
                 return response()->json(['error' => "Region ID $region uchun foydalanuvchi topilmadi"], 404);
@@ -84,10 +84,10 @@ class WinnerController extends Controller
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id')
-                ->groupBy('user_id')  // Bitta user_id bir marta tanlanishi uchun
                 ->inRandomOrder()
-                ->limit($count - $winners->count())
-                ->get();
+                ->get()
+                ->unique('user_id')
+                ->take($perRegionCount);
 
             $winners = $winners->merge($additionalUsers);
         }
