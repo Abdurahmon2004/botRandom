@@ -66,7 +66,7 @@ class WinnerController extends Controller
         $winners = collect();
 
         foreach ($regionProductCombinations as $combination) {
-            $regionUsers = CodeUser::where('region_id', $combination['region_id'])
+            $regionUsers = CodeUser::where('status',1)->where('region_id', $combination['region_id'])
                 ->where('product_id', $combination['product_id'])
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id', 'product_id')
@@ -81,7 +81,7 @@ class WinnerController extends Controller
         // Agar umumiy son yetarli bo'lmasa, qolgan foydalanuvchilarni qo'shish
         if ($winners->count() < $count) {
             $remainingCount = $count - $winners->count();
-            $additionalUsers = CodeUser::whereIn('region_id', $winn->region_ids)
+            $additionalUsers = CodeUser::where('status',1)->whereIn('region_id', $winn->region_ids)
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
                 ->select('user_id', 'code_id', 'region_id', 'product_id')
