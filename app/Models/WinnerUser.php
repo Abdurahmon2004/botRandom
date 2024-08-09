@@ -18,4 +18,7 @@ class WinnerUser extends Model
     public function code(){
         return $this->belongsTo(Code::class,'code_id');
     }
+    public function product(){
+        return $this->belongsTo(Product::class,'product_id');
+    }
 }

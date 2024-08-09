@@ -18,6 +18,7 @@
                 <td>{{ $user->person->phone }}</td>
                 <td>{{ $user->person->region->name }}</td>
                 <td>{{ $user->code->code }}</td>
+                <td>{{ $user->product->name }}</td>
             </tr>
         @endforeach
     </tbody>
