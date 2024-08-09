@@ -54,22 +54,26 @@ class WinnerController extends Controller
             return response()->json(['error' => 'WinnerGroup topilmadi'], 404);
         }
 
-        // Har bir region uchun ajratib olish kerak bo'lgan foydalanuvchilar soni
-        $regionsCount = count($winn->region_ids);
-        $perRegionCount = (int) ceil($count / $regionsCount);
+        $regionProductCombinations = collect($winn->region_ids)
+            ->crossJoin($winn->product_ids)
+            ->map(function($combination) {
+                return ['region_id' => $combination[0], 'product_id' => $combination[1]];
+            });
+
+        $combinationsCount = $regionProductCombinations->count();
+        $perCombinationCount = (int) ceil($count / $combinationsCount);
 
         $winners = collect();
 
-        foreach ($winn->region_ids as $region) {
-            // Oldindan tanlangan foydalanuvchilarni istisno qilish
-            $regionUsers = CodeUser::where('region_id', $region)
-                ->whereIn('product_id', $winn->product_ids)
+        foreach ($regionProductCombinations as $combination) {
+            $regionUsers = CodeUser::where('region_id', $combination['region_id'])
+                ->where('product_id', $combination['product_id'])
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
-                ->select('user_id', 'code_id', 'region_id','product_id')
+                ->select('user_id', 'code_id', 'region_id', 'product_id')
                 ->inRandomOrder()
                 ->get()
                 ->unique('user_id')
-                ->take($perRegionCount);
+                ->take($perCombinationCount);
 
             $winners = $winners->merge($regionUsers);
         }
@@ -80,7 +84,7 @@ class WinnerController extends Controller
             $additionalUsers = CodeUser::whereIn('region_id', $winn->region_ids)
                 ->whereIn('product_id', $winn->product_ids)
                 ->whereNotIn('user_id', $winners->pluck('user_id')->toArray())
-                ->select('user_id', 'code_id', 'region_id','product_id')
+                ->select('user_id', 'code_id', 'region_id', 'product_id')
                 ->inRandomOrder()
                 ->get()
                 ->unique('user_id')
@@ -103,6 +107,5 @@ class WinnerController extends Controller
 
         return response()->json(['success' => 'Foydalanuvchilar topildi', 'users' => $winners], 200);
     }
-
 
 }
