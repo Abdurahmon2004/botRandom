@@ -44,7 +44,7 @@ class WinnerController extends Controller
         return view('dashboard.winners.user.index', compact('users', 'id'));
     }
 
-    public function getRandomUsers(Request $request, $id)
+    public function saveWinners(Request $request, $id)
     {
         $count = $request->input('count', 5); // Default count is 5 if not provided
 
