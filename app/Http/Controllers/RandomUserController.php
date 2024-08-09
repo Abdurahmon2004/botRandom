@@ -229,7 +229,7 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
             if ($code->status == 1) {
                 $groupId = $code->group->id;
                 $prductId = Group::find($groupId);
-                Log::info($groupId);
+                 Log::info($groupId);
                 if(!$prductId && $groupId){
                     $message = 'Nimadur xato ketdi.
 Iltimos Himoya qatlami ostidagi kodni boshqatdan kiriting!';
