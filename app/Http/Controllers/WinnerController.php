@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CodeUser;
+use App\Models\Product;
+use App\Models\Region;
 use App\Models\WinnerGroup;
 use App\Models\WinnerUser;
 use Illuminate\Http\Request;
@@ -15,11 +17,14 @@ class WinnerController extends Controller
         if ($request->ajax()) {
             return view('dashboard.winners.ajax-table', compact('winnerGroups'))->render();
         }
-        return view('dashboard.winners.index', compact('winnerGroups'));
+        $regions = Region::all();
+        $products = Product::all();
+        return view('dashboard.winners.index', compact('winnerGroups', 'regions', 'products'));
     }
 
     public function store(Request $request)
     {
+        // return dd($request);
         $winnerGroup = WinnerGroup::create($request->all());
         return response()->json($winnerGroup);
     }
@@ -34,77 +39,57 @@ class WinnerController extends Controller
     {
         $users = WinnerUser::where('winner_group_id', $id)->get();
         if ($request->ajax()) {
-            return view('dashboard.winners.user.ajax-table', compact('users','id'))->render();
+            return view('dashboard.winners.user.ajax-table', compact('users', 'id'))->render();
         }
         return view('dashboard.winners.user.index', compact('users', 'id'));
     }
 
-
-    public function saveWinners(Request $request, $id)
+    public function getRandomUsers(Request $request, $id)
     {
-        try {
-            $count = $request->input('count', 5); // Default count is 5 if not provided
+        $count = $request->input('count', 5); // Default count is 5 if not provided
 
-        // Barcha region_id larni olish
-        $regions = CodeUser::where('status',1)->select('region_id')->distinct()->pluck('region_id');
-        if($regions->count() == 0){
-            return response()->json(['error' => 'Foydalanuvchi yoq'], 404);
+        // WinnerGroup ni topish
+        $winn = WinnerGroup::find($id);
+        if (!$winn) {
+            return response()->json(['error' => 'WinnerGroup topilmadi'], 404);
         }
-        // G'oliblar ro'yxatini saqlash uchun bo'sh array yaratish
+
+        // Har bir region uchun ajratib olish kerak bo'lgan foydalanuvchilar soni
+        $regionsCount = count($winn->region_ids);
+        $perRegionCount = (int) ceil($count / $regionsCount);
+
         $winners = collect();
 
-        // Har bir region uchun foydalanuvchilarni to'plash
-        $regionUsers = [];
-        foreach ($regions as $region) {
-            $regionUsers[$region] = CodeUser::where('region_id', $region)
+        foreach ($winn->region_ids as $region) {
+            $regionUsers = CodeUser::where('region_id', $region)
+                ->whereIn('product_id', $winn->product_ids)
                 ->select('user_id', 'code_id', 'region_id')
                 ->distinct()
                 ->inRandomOrder()
+                ->limit($perRegionCount)
                 ->get();
-        }
 
-        // Teng taqsimlash uchun har bir regiondan $count/$regions->count() miqdorda foydalanuvchilarni olish
-        $perRegionCount = (int) ceil($count / $regions->count());
-        foreach ($regionUsers as $users) {
-            foreach ($users as $user) {
-                if (!$winners->contains('user_id', $user->user_id)) {
-                    $winners->push($user);
-                    if ($winners->count() >= $perRegionCount) {
-                        break;
-                    }
-
-                }
+            if ($regionUsers->isEmpty()) {
+                return response()->json(['error' => "Region ID $region uchun foydalanuvchi topilmadi"], 404);
             }
+
+            $winners = $winners->merge($regionUsers);
         }
 
-        // Agar g'oliblar soni yetarli bo'lmasa qolgan foydalanuvchilarni tanlash
+        // Agar umumiy son yetarli bo'lmasa, qolgan foydalanuvchilarni qo'shish
         if ($winners->count() < $count) {
-            foreach ($regionUsers as $users) {
-                foreach ($users as $user) {
-                    if (!$winners->contains('user_id', $user->user_id)) {
-                        $winners->push($user);
-                        if ($winners->count() >= $count) {
-                            break 2;
-                        }
+            $additionalUsers = CodeUser::whereIn('region_id', $winn->region_ids)
+                ->whereIn('product_id', $winn->product_ids)
+                ->select('user_id', 'code_id', 'region_id')
+                ->distinct()
+                ->inRandomOrder()
+                ->limit($count - $winners->count())
+                ->get();
 
-                    }
-                }
-            }
+            $winners = $winners->merge($additionalUsers);
         }
 
-        // G'oliblarni WinnerUser jadvaliga saqlash
-        foreach ($winners as $winner) {
-            WinnerUser::create([
-                'winner_group_id' => $id,
-                'user_id' => $winner->user_id,
-                'code_id' => $winner->code_id,
-                'region_id' => $winner->region_id,
-            ]);
-        }
-        CodeUser::query()->update(['status' => 0]);
-        return response()->json(['success' => 'Winners saved successfully'], 200);
-        } catch (\Throwable $th) {
-         return response()->json(['error' => 'Foydalanuvchi yoq'], 404);
-        }
+        return response()->json(['success' => 'Foydalanuvchilar topildi', 'users' => $winners], 200);
     }
+
 }

@@ -12,4 +12,8 @@ class WinnerGroup extends Model
     public function users(){
         return $this->hasMany(WinnerUser::class);
     }
+    protected $casts = [
+        'region_ids' => 'array',
+        'product_ids' => 'array',
+    ];
 }

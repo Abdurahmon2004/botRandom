@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('winner_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->json('region_ids')->nullable();
+            $table->json('product_ids')->nullable();
             $table->timestamps();
         });
     }

@@ -31,8 +31,6 @@
 <script src="/dashboard/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/dashboard/dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="/dashboard/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="/dashboard/dist/js/pages/dashboard.js"></script>
 <script src="/dashboard/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>

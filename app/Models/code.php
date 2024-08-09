@@ -9,7 +9,10 @@ class Code extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    // public function group(){
+    //     return $this->belongsTo(Code::class);
+    // }
     public function group(){
-        return $this->belongsTo(Code::class);
+        return $this->belongsTo(Group::class);
     }
 }
