@@ -8,6 +8,7 @@
             <th>Telefon raqami</th>
             <th>Hududi</th>
             <th>Kiritgan kodi</th>
+            <th>Maxsulot nomi</th>
         </tr>
     </thead>
     <tbody>

@@ -71,9 +71,7 @@ class WinnerController extends Controller
                 ->unique('user_id')
                 ->take($perRegionCount);
 
-            if ($regionUsers->isEmpty()) {
-                return response()->json(['error' => "Region ID $region uchun foydalanuvchi topilmadi"], 404);
-            }
+
 
             $winners = $winners->merge($regionUsers);
         }
@@ -90,6 +88,9 @@ class WinnerController extends Controller
                 ->take($perRegionCount);
 
             $winners = $winners->merge($additionalUsers);
+        }
+        if ($winners->isEmpty()) {
+            return response()->json(['error' => "Region ID $region uchun foydalanuvchi topilmadi"], 404);
         }
         foreach ($winners as $winner){
             WinnerUser::create([
