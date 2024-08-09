@@ -11,6 +11,7 @@ use App\Models\ProductUser;
 use App\Models\Region;
 use App\Models\TgUser;
 use App\Models\UserChat;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -228,6 +229,7 @@ Himoya qatlami ostidagi 🎫 kodni kiriting";
             if ($code->status == 1) {
                 $groupId = $code->group->id;
                 $prductId = Group::find($groupId);
+                Log::info($groupId);
                 if(!$prductId && $groupId){
                     $message = 'Nimadur xato ketdi.
 Iltimos Himoya qatlami ostidagi kodni boshqatdan kiriting!';
