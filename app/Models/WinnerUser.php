@@ -19,6 +19,6 @@ class WinnerUser extends Model
         return $this->belongsTo(Code::class,'code_id');
     }
     public function product(){
-        return $this->belongsTo(Product::class,'product_id');
+        return Group::find($this->winner_group_id)->product->name;
     }
 }
